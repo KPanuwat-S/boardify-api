@@ -1,9 +1,9 @@
-module.exports = (sequelize, Datatypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Board = sequelize.define(
     "Board",
     {
       name: {
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },

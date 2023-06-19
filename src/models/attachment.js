@@ -1,9 +1,9 @@
-module.exports = (sequelize, Datatypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Attachment = sequelize.define(
     "Attachment",
     {
       file: {
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: true,
       },
     },
@@ -27,7 +27,7 @@ module.exports = (sequelize, Datatypes) => {
         allowNull: false,
       },
       onDelete: "RESTRICT",
-    })
+    });
   };
 
   return Attachment;

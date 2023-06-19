@@ -1,13 +1,13 @@
-module.exports = (sequelize, Datatypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Product = sequelize.define(
     "Product",
     {
       name: {
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       duration: {
-        type: Datatypes.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },

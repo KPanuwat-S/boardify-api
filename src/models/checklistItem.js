@@ -1,13 +1,13 @@
-module.exports = (sequelize, Datatypes) => {
+module.exports = (sequelize, DataTypes) => {
   const ChecklistItem = sequelize.define(
     "ChecklistItem",
     {
       description: {
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: true,
       },
       isChecked: {
-        type: Datatypes.BOOLEEN,
+        type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
     },
