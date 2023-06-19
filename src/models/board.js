@@ -1,6 +1,6 @@
 module.exports = (sequelize, Datatype) => {
-  const Workspace = sequelize.data(
-    "Workspace",
+  const Board = sequelize.data(
+    "Board",
     {
       name: {
         type: Datatype.STRING,
@@ -11,5 +11,5 @@ module.exports = (sequelize, Datatype) => {
       underscored: true,
     }
   );
-  return Workspace;
+  return Board;
 };
