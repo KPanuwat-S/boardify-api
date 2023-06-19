@@ -1,9 +1,9 @@
-module.exports = (sequelize, Datatype) => {
-  const Payment = sequelize.data(
+module.exports = (sequelize, Datatypes) => {
+  const Payment = sequelize.define(
     "Payment",
     {
       endAt: {
-        type: Datatype.DATETIME,
+        type: Datatypes.DATETIME,
         allowNull: false,
       },
     },

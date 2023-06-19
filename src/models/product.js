@@ -1,13 +1,13 @@
-module.exports = (sequelize, Datatype) => {
-  const Product = sequelize.data(
+module.exports = (sequelize, Datatypes) => {
+  const Product = sequelize.define(
     "Product",
     {
       name: {
-        type: Datatype.STRING,
+        type: Datatypes.STRING,
         allowNull: false,
       },
       duration: {
-        type: Datatype.INTEGER,
+        type: Datatypes.INTEGER,
         allowNull: false,
       },
     },

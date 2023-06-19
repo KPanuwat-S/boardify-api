@@ -1,9 +1,9 @@
-module.exports = (sequelize, Datatype) => {
-  const Attachment = sequelize.data(
+module.exports = (sequelize, Datatypes) => {
+  const Attachment = sequelize.define(
     "Attachment",
     {
       file: {
-        type: Datatype.STRING,
+        type: Datatypes.STRING,
         allowNull: true,
       },
     },

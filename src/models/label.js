@@ -1,13 +1,13 @@
-module.exports = (sequelize, Datatype) => {
-  const Label = sequelize.data(
+module.exports = (sequelize, Datatypes) => {
+  const Label = sequelize.define(
     "Label",
     {
       description: {
-        type: Datatype.STRING,
+        type: Datatypes.STRING,
         allowNull: false,
       },
       color: {
-        type: Datatype.STRING,
+        type: Datatypes.STRING,
         allowNull: false,
       },
     },

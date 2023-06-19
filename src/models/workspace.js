@@ -1,9 +1,9 @@
-module.exports = (sequelize, Datatype) => {
-  const Workspace = sequelize.data(
+module.exports = (sequelize, Datatypes) => {
+  const Workspace = sequelize.define(
     "Workspace",
     {
       name: {
-        type: Datatype.STRING,
+        type: Datatypes.STRING,
         allowNull: false,
       },
     },

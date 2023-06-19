@@ -1,13 +1,13 @@
-module.exports = (sequelize, Datatype) => {
-  const Card = sequelize.data(
+module.exports = (sequelize, Datatypes) => {
+  const Card = sequelize.define(
     "Card",
     {
       name: {
-        type: Datatype.STRING,
+        type: Datatypes.STRING,
         allowNull: false,
       },
       position: {
-        type: Datatype.INTEGER,
+        type: Datatypes.INTEGER,
         allowNull: false,
       },
     },
