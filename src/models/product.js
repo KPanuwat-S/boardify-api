@@ -15,5 +15,16 @@ module.exports = (sequelize, Datatype) => {
       underscored: true,
     }
   );
+
+  Product.associate = (models) => {
+    Product.hasMany(models.Payment, {
+      foreignKey: {
+        name: "productId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return Product;
 };

@@ -11,5 +11,24 @@ module.exports = (sequelize, Datatype) => {
       underscored: true,
     }
   );
+
+  Payment.associate = (models) => {
+    Payment.belongsTo(models.Product, {
+      foreignKey: {
+        name: "productId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    Payment.belongsTo(models.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return Payment;
 };

@@ -38,5 +38,56 @@ module.exports = (sequelize, Datatype) => {
       underscored: true,
     }
   );
-  return User
+
+  User.associate = (models) => {
+    User.hasOne(models.Payment, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    User.hasMany(models.Comment, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    User.hasMany(models.Attachment, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    User.hasMany(models.Task, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    User.hasMany(models.Workspace, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    User.hasMany(models.Board, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
+  return User;
 };

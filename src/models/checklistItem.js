@@ -15,5 +15,16 @@ module.exports = (sequelize, Datatype) => {
       underscored: true,
     }
   );
+
+  ChecklistItem.associate = (models) => {
+    ChecklistItem.belongsTo(models.Task, {
+      foreignKey: {
+        name: "taskId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return ChecklistItem;
 };

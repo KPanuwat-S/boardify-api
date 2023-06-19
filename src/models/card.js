@@ -15,5 +15,24 @@ module.exports = (sequelize, Datatype) => {
       underscored: true,
     }
   );
+
+  Card.associate = (models) => {
+    Card.belongsTo(models.Board, {
+      foreignKey: {
+        name: "boardId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    Card.hasMany(models.Task, {
+      foreignKey: {
+        name: "cardId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return Card;
 };
