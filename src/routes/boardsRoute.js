@@ -1,9 +1,9 @@
-const express = require("express");
+// const express = require("express");
 
-const boardsController = require("../controllers/boardsController");
+// const boardsController = require("../controllers/boardsController");
 
-const router = express.Router();
+// const router = express.Router();
 
-router.get("/", boardsController.getBaords);
+// router.get("/", boardsController.getBaords);
 
-module.exports = router;
+// module.exports = router;
