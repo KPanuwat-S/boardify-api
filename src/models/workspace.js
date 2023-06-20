@@ -27,7 +27,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       onDelete: "RESTRICT",
-    })
+    });
+
+    Workspace.hasMany(models.WorkspaceMember, {
+      foreignKey: {
+        name: "workspaceId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
   };
 
   return Workspace;

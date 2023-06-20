@@ -11,5 +11,24 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+
+  WorkspaceMember.associate = (models) => {
+    WorkspaceMember.belongsTo(models.User, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    WorkspaceMember.belongsTo(models.Workspace, {
+      foreignKey: {
+        name: "workspaceId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+  };
+
   return WorkspaceMember;
 };
