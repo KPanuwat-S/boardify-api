@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      description: {
+        type: DataTypes.STRING,
+      },
       position: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -63,6 +66,14 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Task.hasMany(models.ChecklistItem, {
+      foreignKey: {
+        name: "taskId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    Task.hasMany(models.TaskMember, {
       foreignKey: {
         name: "taskId",
         allowNull: false,
