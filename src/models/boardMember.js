@@ -1,5 +1,5 @@
 module.exports = (sequelize, Datatypes) => {
-  const BoardMember = sequelize.define("BoardMember", {
+  const BoardMember = sequelize.define("BoardMember",{}, {
     underscored: true,
     paranoid: true,
   });
