@@ -7,6 +7,6 @@ const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
 
 // router.get("/", boardsController.getBaords);
-router.get("/getCards/:id", authenticate, cardsController.getCardsByBoard);
+router.get("/getCards/:id", cardsController.getCardsByBoard);
 
 module.exports = router;

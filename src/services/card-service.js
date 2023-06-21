@@ -1,4 +1,15 @@
-const { User, Board, Card, Task, Workspace } = require("../models");
+const {
+  User,
+  Workspace,
+  Board,
+  BoardMember,
+  Card,
+  Task,
+  TaskMember,
+  Comment,
+  ChecklistItem,
+  label,
+} = require("../models");
 
 exports.findAdminByWorkSpaceId = (boardId) => {
   return Workspace.findOne({
@@ -31,37 +42,10 @@ exports.findAdminByWorkSpaceId = (boardId) => {
 //     },
 //   });
 exports.findCardsByBoardId = (boardId) => {
-  return Workspace.findAll({
-    attributes: {
-      exclude: ["name", "createdAt", "updatedAt", "workspaceId", "id"],
-    },
+  return Board.findAll({
+    where: { id: boardId },
     include: {
-      model: Board,
-      where: { id: boardId },
-      attributes: {
-        exclude: ["createdAt", "updatedAt", "workspaceId", "userId"],
-      },
-      include: {
-        model: Card,
-        where: { id: boardId },
-        attributes: {
-          exclude: ["createdAt", "updatedAt", "position", "boardId"],
-        },
-        include: {
-          model: Task,
-          where: { id: boardId },
-          attributes: {
-            exclude: ["createdAt", "updatedAt", "position", "boardId"],
-          },
-          include: {
-            model: Task,
-            where: { id: boardId },
-            attributes: {
-              exclude: ["createdAt", "updatedAt", "position", "boardId"],
-            },
-          },
-        },
-      },
+      model: BoardMember,
     },
   });
 };
