@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
+      paranoid: true,
     }
   );
 
@@ -22,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Board.hasMany(models.Card, {
+      foreignKey: {
+        name: "boardId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    Board.hasMany(models.Workspace, {
       foreignKey: {
         name: "boardId",
         allowNull: false,

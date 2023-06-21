@@ -94,7 +94,23 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       onDelete: "RESTRICT",
-    })
+    });
+
+    User.hasMany(models.BoardMember, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
+
+    User.hasMany(models.TaskMember, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+      onDelete: "RESTRICT",
+    });
   };
 
   return User;
