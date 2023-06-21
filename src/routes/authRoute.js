@@ -8,5 +8,6 @@ const router = express.Router();
 router.post("/register", authController.register);
 router.post("/login", authController.login);
 router.get("/getUser", authenticate, authController.getUser);
+router.get("/emailconfirmation/:token", authController.verify)
 
 module.exports = router;

@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
+      paranoid: true,
     }
   );
 
@@ -29,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       onDelete: "RESTRICT",
-    })
-  }
+    });
+  };
 
   return Comment;
 };

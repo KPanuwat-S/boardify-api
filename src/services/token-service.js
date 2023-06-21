@@ -6,3 +6,6 @@ exports.sign = (payload) =>
   });
 
 exports.verify = (token) => jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+exports.verifyEmail = (tokenEmail) =>
+  jwt.verify(tokenEmail, process.env.JWT_SECRET_KEY);
