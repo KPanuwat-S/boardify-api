@@ -7,7 +7,8 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const notFoundMiddleware = require("./middlewares/notFound");
 const errorMiddleware = require("./middlewares/error");
-const boardsRoute = require("./route/boardsRoute");
+// const boardsRoute = require("./route/boardsRoute");
+const authRoute = require("./routes/authRoute");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -23,8 +24,8 @@ app.use(
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-
-app.use("/boards", boardsRoute);
+app.use("/auth", authRoute);
+// app.use("/boards", boardsRoute);
 // app.use("/", res.send({ message: "Hi Boardify" }));
 
 app.use(notFoundMiddleware);

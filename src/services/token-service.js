@@ -1,0 +1,12 @@
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
+exports.sign = (payload) =>
+  jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+    expiresIn: process.env.JWT_EXPIRE_IN,
+  });
+
+exports.verify = (token) => jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+exports.verifyEmail = (tokenEmail) =>
+  jwt.verify(tokenEmail, process.env.JWT_SECRET_KEY);
