@@ -30,13 +30,13 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
     });
 
-    Board.hasMany(models.Workspace, {
-      foreignKey: {
-        name: "boardId",
-        allowNull: false,
-      },
-      onDelete: "RESTRICT",
-    });
+    // Board.hasMany(models.Workspace, {
+    //   foreignKey: {
+    //     name: "boardId",
+    //     allowNull: false,
+    //   },
+    //   onDelete: "RESTRICT",
+    // });
 
     Board.belongsTo(models.Workspace, {
       foreignKey: {

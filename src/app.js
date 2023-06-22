@@ -8,6 +8,7 @@ const rateLimit = require("express-rate-limit");
 const notFoundMiddleware = require("./middlewares/notFound");
 const errorMiddleware = require("./middlewares/error");
 const boardsRoute = require("./routes/boardsRoute");
+const workSpaceRoute = require("./routes/workSpaceRoute");
 const authRoute = require("./routes/authRoute");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use("/auth", authRoute);
 app.use("/boards", boardsRoute);
 // app.use("/", res.send({ message: "Hi Boardify" }));
+app.use(workSpaceRoute);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
