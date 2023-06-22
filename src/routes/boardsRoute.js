@@ -5,6 +5,6 @@ const boardsController = require("../controllers/boardsController");
 const router = express.Router();
 
 router.post("/createBoard", boardsController.createBoard);
-router.get("/", boardsController.getBoard);
+router.get("/getAllBoard", boardsController.getAllBoard);
 
 module.exports = router;
