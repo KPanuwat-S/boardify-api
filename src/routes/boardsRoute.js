@@ -1,10 +1,12 @@
 const express = require("express");
 
 const boardsController = require("../controllers/boardsController");
+const cardsController = require("../controllers/cardController");
+const authenticate = require("../middlewares/authenticate");
 
 const router = express.Router();
 
-router.post("/createBoard", boardsController.createBoard);
-router.get("/", boardsController.getBoard);
+// router.get("/", boardsController.getBaords);
+router.get("/getCards/:id", cardsController.getCardsByBoard);
 
 module.exports = router;
