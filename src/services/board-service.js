@@ -1,16 +1,5 @@
-const { Workspace, Board } = require("../models");
+const { Board } = require("../models");
 
-exports.getBoard = async (id) => {
-  const board = await Board.findAll({
-    where: { userId: id },
-    include: [
-      {
-        model: Workspace,
-      },
-    ],
-  });
-
-  return board;
-};
+exports.getBoard = (id) => Board.findOne({ where: { id: id } });
 
 exports.createBoard = (board) => Board.create(board);
