@@ -1,10 +1,18 @@
 const boardService = require("../services/board-service");
 
 exports.getAllBoard = async (req, res, next) => {
+  let response = {};
   try {
-    const boardData = await boardService.findAllBoard();
+    const user = 1;
+    const boardData = await boardService.getBoard(user);
+    response = {
+      boardData: {
+        userId: user,
+        board: boardData,
+      },
+    };
 
-    res.status(200).json(boardData);
+    res.status(200).json(response);
   } catch (err) {
     next(err);
   }
