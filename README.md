@@ -5,6 +5,7 @@
 
 2.Register
 ***Method: POST***
+ไปเปลี่ยน PORT ที่ไฟล์ emailVerifyService ที่ exports.verify -> const mailGenerator -> link: "http://localhost:(ใส่ Port หน้าบ้านของตัวเอง)/"
 
 3.Workspace
 ***Method: GET***
