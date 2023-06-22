@@ -89,3 +89,28 @@ exports.verify = async (req, res, next) => {
 exports.getUser = (req, res, next) => {
   res.status(200).json({ user: req.user });
 };
+
+exports.googleLogin = async (req, res, next) => {
+  const { googleId } = req.body.profileObj;
+  console.log(req);
+  const user = await authService.findByGoogleId(googleId);
+  try {
+    if (!user) {
+      const googleUser = req.body.profileObj;
+      const user = {
+        firstName: googleUser.givenName,
+        lastName: googleUser.familyName,
+        email: googleUser.email,
+        isVerify: true,
+        googleId: googleId,
+      };
+      await authService.createUser(user);
+    }
+
+    const accessToken = tokenService.sign({ id: user.id });
+    console.log("accesstoken form gglogin fn", accessToken);
+    res.status(200).json({ accessToken });
+  } catch (err) {
+    next(err);
+  }
+};
