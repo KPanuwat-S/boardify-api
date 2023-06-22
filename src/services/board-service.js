@@ -1,18 +1,17 @@
-const Board = require("../models");
+const { Board } = require("../models");
 
-exports.findAllboard = async () => {
-  try {
-    const board = await Board.findAll();
+exports.getBoard = async (id) => {
+  //หา workspaces ทั้งหมด
+  const board = await Board.findAll({
+    where: { userId: id },
+    include: [
+      {
+        model: Board,
+      },
+    ],
+  });
 
-    if (board) {
-      console.log("User found:", board);
-    } else {
-      console.log("User not found");
-    }
-    return board;
-  } catch (error) {
-    console.error("Error occurred while finding user:", error);
-  }
+  return board;
 };
 
 exports.createBoard = (board) => Board.create(board);
