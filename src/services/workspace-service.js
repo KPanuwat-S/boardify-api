@@ -21,3 +21,4 @@ exports.getBoard = async (id) => {
 
   return workspaces;
 };
+exports.createwokeSpace = (workspace) => Workspace.create(workspace);
