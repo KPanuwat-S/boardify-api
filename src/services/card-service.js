@@ -1,67 +1,102 @@
-const { User, Board, Card, Task, Workspace } = require("../models");
-
-exports.findAdminByWorkSpaceId = (boardId) => {
-  return Workspace.findOne({
-    attributes: {
-      exclude: ["name", "createdAt", "updatedAt", "workspaceId", "id"],
-    },
-    include: {
-      model: Board,
-      where: { id: boardId },
-      attributes: {
-        exclude: [
-          "name",
-          "createdAt",
-          "updatedAt",
-          "workspaceId",
-          "userId",
-          "id",
-        ],
-      },
-    },
-  });
-};
-// {
-//     where: { id: boardId },
-//     attributes: { exclude: ["name", "createdAt", "updatedAt", "workspaceId"] },
+const {
+  User,
+  Board,
+  Card,
+  Task,
+  Workspace,
+  ChecklistItem,
+  Comment,
+  Label,
+  BoardMember,
+  TaskMember,
+  Attachment,
+} = require("../models");
+// exports.findAdminByWorkSpaceId = (boardId) => {
+//   return Workspace.findOne({
+//     attributes: {
+//       exclude: ["name", "createdAt", "updatedAt", "workspaceId", "id"],
+//     },
 //     include: {
-//       model: Card,
-//       where: { boardId: boardId },
-//       attributes: { exclude: ["createdAt", "updatedAt"] },
+//       model: Board,
+//       where: { id: boardId },
+//       attributes: {
+//         exclude: [
+//           "name",
+//           "createdAt",
+//           "updatedAt",
+//           "workspaceId",
+//           "userId",
+//           "id",
+//         ],
+//       },
 //     },
 //   });
+// };
+
 exports.findCardsByBoardId = (boardId) => {
   return Workspace.findAll({
-    attributes: {
-      exclude: ["name", "createdAt", "updatedAt", "workspaceId", "id"],
-    },
+    attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
     include: {
       model: Board,
       where: { id: boardId },
-      attributes: {
-        exclude: ["createdAt", "updatedAt", "workspaceId", "userId"],
-      },
-      include: {
-        model: Card,
-        where: { id: boardId },
-        attributes: {
-          exclude: ["createdAt", "updatedAt", "position", "boardId"],
+      attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+      include: [
+        {
+          model: BoardMember,
+          attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         },
-        include: {
-          model: Task,
-          where: { id: boardId },
+        {
+          model: Card,
+          where: { boardId: boardId },
           attributes: {
-            exclude: ["createdAt", "updatedAt", "position", "boardId"],
+            exclude: ["createdAt", "updatedAt", "deletedAt", "boardId"],
           },
           include: {
             model: Task,
-            where: { id: boardId },
             attributes: {
-              exclude: ["createdAt", "updatedAt", "position", "boardId"],
+              exclude: [
+                "createdAt",
+                "updatedAt",
+                "deletedAt",
+                "attachmentId",
+                "cardId",
+                "commentId",
+                "labelId",
+                "userId",
+              ],
             },
+            include: [
+              {
+                model: Label,
+                attributes: {
+                  exclude: ["createdAt", "updatedAt", "deletedAt", "id"],
+                },
+              },
+              {
+                model: ChecklistItem,
+              },
+              {
+                model: Comment,
+                attributes: {
+                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
+              },
+              {
+                model: TaskMember,
+                attributes: {
+                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
+              },
+              {
+                model: Attachment,
+                attributes: {
+                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
+              },
+            ],
           },
         },
-      },
+      ],
     },
   });
 };
