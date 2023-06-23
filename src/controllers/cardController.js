@@ -75,10 +75,21 @@ exports.addCard = async (req, res, next) => {
 
 exports.updateNameCard = async (req, res, next) => {
   // require (name||type) || position , cardId
-
   try {
-    const boardId = req.params;
     const data = req.body;
+    console.log(data);
+    const checkCardById = await cardService.findCardById(
+      data.boardId,
+      data.cardId
+    );
+    if (!checkCardById) createError("Not found", 400);
+    const cardData = await cardService.updateCard(
+      checkCardById.Cards[0],
+      data.name,
+      data.position
+    );
+    if (!cardData) createError("try again", 400);
+    res.json(cardData);
   } catch (error) {
     next(error);
   }

@@ -11,6 +11,7 @@ const {
   TaskMember,
   Attachment,
 } = require("../models");
+const { Op } = require("sequelize");
 
 exports.findCardsByBoardId = (boardId) => {
   return Workspace.findAll({
@@ -79,11 +80,21 @@ exports.findCardsByBoardId = (boardId) => {
     },
   });
 };
-
 exports.findBoardById = (boardId) =>
   Board.findOne({
     where: { id: boardId },
   });
+exports.findCardById = (boardId, cardId) => {
+  return Board.findOne({
+    where: { id: boardId },
+    include: {
+      model: Card,
+      where: { [Op.and]: [{ id: cardId }, { boardId }] },
+    },
+  });
+};
+exports.updateCard = (data, name, position) =>
+  Card.update({ name, position }, { where: { id: data.id } });
 exports.createCard = (data) => Card.create(data);
 
 exports.deleteCardById = (cardId) => Card.destroy({ where: { id: cardId.id } });
