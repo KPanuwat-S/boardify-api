@@ -11,27 +11,6 @@ const {
   TaskMember,
   Attachment,
 } = require("../models");
-// exports.findAdminByWorkSpaceId = (boardId) => {
-//   return Workspace.findOne({
-//     attributes: {
-//       exclude: ["name", "createdAt", "updatedAt", "workspaceId", "id"],
-//     },
-//     include: {
-//       model: Board,
-//       where: { id: boardId },
-//       attributes: {
-//         exclude: [
-//           "name",
-//           "createdAt",
-//           "updatedAt",
-//           "workspaceId",
-//           "userId",
-//           "id",
-//         ],
-//       },
-//     },
-//   });
-// };
 
 exports.findCardsByBoardId = (boardId) => {
   return Workspace.findAll({
@@ -100,3 +79,11 @@ exports.findCardsByBoardId = (boardId) => {
     },
   });
 };
+
+exports.findBoardById = (boardId) =>
+  Board.findOne({
+    where: { id: boardId },
+  });
+exports.createCard = (data) => Card.create(data);
+
+exports.deleteCardById = (cardId) => Card.destroy({ where: { id: cardId.id } });

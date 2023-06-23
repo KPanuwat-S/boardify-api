@@ -1,10 +1,9 @@
 const cardService = require("../services/card-service");
+const createError = require("../utils/createError");
 
 exports.getCardsByBoard = async (req, res, next) => {
   try {
     const board = req.params;
-    const user = req.user;
-
     const cardData = await cardService.findCardsByBoardId(board.id);
     const fetchData = cardData.map((el) => {
       const [boardIdData] = el.Boards.map((el) => el.id);
@@ -53,6 +52,49 @@ exports.getCardsByBoard = async (req, res, next) => {
     });
     const [data] = fetchData;
     res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.addCard = async (req, res, next) => {
+  try {
+    //require board_id name position
+    const data = req.body;
+    if (!data.name || !data.position) createError("error", 400);
+    const { id } = req.params;
+    const checkBoardById = await cardService.findBoardById(id);
+    if (!checkBoardById) createError("error", 400);
+    const newData = { ...data, boardId: id };
+    const cardData = await cardService.createCard(newData);
+    res.status(200).json(cardData);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateNameCard = async (req, res, next) => {
+  // require (name||type) || position , cardId
+
+  try {
+    const boardId = req.params;
+    const data = req.body;
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteCard = async (req, res, next) => {
+  //require cardId
+  try {
+    const cardId = req.params;
+    if (!cardId) createError("CardId is require");
+    const deleteData = await cardService.deleteCardById(cardId);
+    if (deleteData) {
+      return res.status(200).json({ msg: "Delete is Complete" });
+    } else {
+      return res.status(200).json({ msg: "Not found" });
+    }
   } catch (error) {
     next(error);
   }
