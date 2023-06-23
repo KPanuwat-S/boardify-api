@@ -72,10 +72,10 @@ exports.verify = async (req, res, next) => {
     const payload = tokenService.verifyEmail(tokenEmail);
     console.log(payload);
 
-    const user = await authService.getUserById(payload.id)
+    const user = await authService.getUserById(payload.id);
     console.log(user);
     if (!user) {
-      createError("Email not register", 401)
+      createError("Email not register", 401);
     }
 
     await User.update({ isVerify: true }, { where: { id: user.id } });
@@ -83,7 +83,7 @@ exports.verify = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-  return res.redirect("http://localhost:5174/")
+  return res.redirect("http://localhost:5174/");
 };
 
 exports.getUser = (req, res, next) => {
