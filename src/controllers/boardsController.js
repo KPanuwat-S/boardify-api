@@ -3,6 +3,7 @@ const boardService = require("../services/board-service");
 exports.getAllBoard = async (req, res, next) => {
   let response = {};
   try {
+    const user = 1;
     const boardName = await boardService.getBoard(user);
     response = {
       boardData: {

@@ -5,7 +5,7 @@ exports.getAllBaords = async (req, res, next) => {
   try {
     //ไปแกะโทเค็นเอา userId มาใช้ แทน user
 
-    const user = 1;
+    const user = req.query.userId;
     const workspaceData = await workspaceService.getBoard(user);
     response = {
       workspacesData: {
