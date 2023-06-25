@@ -48,8 +48,8 @@ exports.login = async (req, res, next) => {
       createError("Please confirm your email to login.");
     }
 
-    const user = await authService.checkUserByEmail(value.email);
-    if (!user) createError("User not found", 400);
+    const user = await authService.checkUserByEmailAndVerify(value.email);
+    if (!user) createError("User not Verify", 400);
     const isCorrect = await bcryptService.compare(
       value.password,
       user.password

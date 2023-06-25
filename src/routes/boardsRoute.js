@@ -1,9 +1,12 @@
-// const express = require("express");
+const express = require("express");
 
-// const boardsController = require("../controllers/boardsController");
+const boardsController = require("../controllers/boardsController");
+const cardsController = require("../controllers/cardController");
+const authenticate = require("../middlewares/authenticate");
 
-// const router = express.Router();
+const router = express.Router();
 
 // router.get("/", boardsController.getBaords);
+router.get("/getCards/:id", cardsController.getCardsByBoard);
 
-// module.exports = router;
+module.exports = router;
