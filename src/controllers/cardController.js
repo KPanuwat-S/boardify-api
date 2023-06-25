@@ -11,7 +11,7 @@ exports.getCardsByBoard = async (req, res, next) => {
       const [membersData] = el.Boards.map((el) => el.BoardMembers);
       const [cardsData] = el.Boards.map((el) => {
         const newCardData = el.Cards.map((el) => {
-          return (taskData = {
+          taskData = {
             cardID: el.id,
             cardName: el.name,
             cardPosition: el.position,
@@ -25,9 +25,12 @@ exports.getCardsByBoard = async (req, res, next) => {
                 labelDescription: el.Label.description,
                 checkListsTotal: el.ChecklistItems.length,
                 checkListsChecked: el.ChecklistItems.reduce((acc, curr) => {
-                  if (curr.isChecked == 1) {
+                  if (curr.isChecked) {
                     return (acc += 1);
+                  } else if (!curr.isChecked) {
+                    return acc;
                   }
+                  return acc;
                 }, 0),
                 dueDate: el.dueDate,
                 commentsNumber: el.Comment,
@@ -38,7 +41,9 @@ exports.getCardsByBoard = async (req, res, next) => {
                 numberOfFilesAttached: el.Attachment,
               });
             }),
-          });
+          };
+          taskData.tasks.sort((a, b) => a.taskPosition - b.taskPosition);
+          return taskData;
         });
         return newCardData;
       });
@@ -47,9 +52,10 @@ exports.getCardsByBoard = async (req, res, next) => {
         boardId: boardIdData,
         boardName: boardNameData,
         members: membersData,
-        cards: cardsData,
+        cards: cardsData.sort((a, b) => a.cardPosition - b.cardPosition),
       });
     });
+
     const [data] = fetchData;
     res.status(200).json(data);
   } catch (error) {
@@ -61,10 +67,10 @@ exports.addCard = async (req, res, next) => {
   try {
     //require board_id name position
     const data = req.body;
-    if (!data.name || !data.position) createError("error", 400);
+    if (!data.name || !data.position) createError("Is require", 400);
     const { id } = req.params;
     const checkBoardById = await cardService.findBoardById(id);
-    if (!checkBoardById) createError("error", 400);
+    if (!checkBoardById) createError("Not Found", 400);
     const newData = { ...data, boardId: id };
     const cardData = await cardService.createCard(newData);
     res.status(200).json(cardData);
@@ -75,6 +81,7 @@ exports.addCard = async (req, res, next) => {
 
 exports.updateNameCard = async (req, res, next) => {
   // require (name||type) || position , cardId
+  // require source = [index,data] , destination = [index,data] , itemSource = [index,data,taskId] , itemDestination = [index,data,]
   try {
     const data = req.body;
     console.log(data);
@@ -106,6 +113,14 @@ exports.deleteCard = async (req, res, next) => {
     } else {
       return res.status(200).json({ msg: "Not found" });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.test = async (req, res, next) => {
+  try {
+    res.json(req.body);
   } catch (error) {
     next(error);
   }

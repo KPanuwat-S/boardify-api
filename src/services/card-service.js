@@ -10,6 +10,7 @@ const {
   BoardMember,
   TaskMember,
   Attachment,
+  sequelize,
 } = require("../models");
 const { Op } = require("sequelize");
 
@@ -20,17 +21,20 @@ exports.findCardsByBoardId = (boardId) => {
       model: Board,
       where: { id: boardId },
       attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+
       include: [
         {
           model: BoardMember,
           attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         },
+
         {
           model: Card,
           where: { boardId: boardId },
           attributes: {
             exclude: ["createdAt", "updatedAt", "deletedAt", "boardId"],
           },
+
           include: {
             model: Task,
             attributes: {

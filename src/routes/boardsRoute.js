@@ -8,8 +8,9 @@ const router = express.Router();
 
 // router.get("/", boardsController.getBaords);
 router.get("/cards/:id", cardsController.getCardsByBoard);
-router.post("/addCard/:id", cardsController.addCard);
+router.post("/cards/:id", cardsController.addCard);
 router.patch("/updateCard/", cardsController.updateNameCard);
-router.delete("/deleteCard/:id", cardsController.deleteCard);
+router.delete("/cards/:id", cardsController.deleteCard);
+router.patch("/test", cardsController.test);
 
 module.exports = router;
