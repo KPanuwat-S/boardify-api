@@ -1,9 +1,11 @@
-const { WorkspaceMember } = require("../models");
+const { WorkspaceMember, Board, Workspace } = require("../models");
 
 exports.getWorkspaces = async (id) => {
-  const data = await WorkspaceMember.findOne({
+  const data = await WorkspaceMember.findAll({
     where: { userId: id },
+    include: [{ model: Workspace, include: { model: Board } }],
   });
-  console.log(data);
+
+  // expected {user:, workspaces:[workspace: {id}],}
   return data;
 };
