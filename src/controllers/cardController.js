@@ -1,6 +1,6 @@
 const cardService = require("../services/card-service");
 
-exports.getCardsByBoard = async (req, res, next) => {
+exports.getCardsByBoardId = async (req, res, next) => {
   try {
     const board = req.params;
     const user = req.user;
