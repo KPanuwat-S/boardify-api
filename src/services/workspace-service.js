@@ -33,7 +33,7 @@ exports.findWorkspaceById = (id) => Workspace.findOne({ where: { id } });
 exports.updateWorkspaceById = (id, name) =>
   Workspace.update({ name }, { where: { id } });
 
-exports.getAllMemberInWorkspace = async (workspaceId) => {
+exports.getAllMembersInWorkspace = async (workspaceId) => {
   const data = await WorkspaceMember.findAll({
     where: { id: workspaceId },
     include: [{ model: User, attributes: ["firstName", "lastName", "email"] }],
