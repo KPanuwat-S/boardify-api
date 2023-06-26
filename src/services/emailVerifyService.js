@@ -29,7 +29,7 @@ exports.verify = (value, url) => {
   const formattemail = {
     body: {
       name: firstName + " " + lastName,
-      intro: "Thanks for signing up for Boradify",
+      intro: "Thanks for signing up for Boardify",
       action: {
         instuctions: "To get started with Boardify, please click here:",
         button: {

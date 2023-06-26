@@ -19,11 +19,10 @@ exports.findMemberById = (workspaceId, userId) =>
       where: { [Op.and]: [{ id: workspaceId }, { userId }] },
     },
   });
-// exports.findMemberByUserId = (userId, workspaceId) => {
-//   return WorkspaceMember.findAll({
-//     where: { [Op.and]: [{ workspaceId }, { userId }] },
-//   });
-// };
+exports.findAdminById = (workspaceId, userId) =>
+  Workspace.findAll({
+    where: { [Op.and]: [{ id: workspaceId }, { userId }] },
+  });
 
 exports.createMemberByAdminId = (workspaceId, userId) =>
   WorkspaceMember.create({ userId, workspaceId, isAdmin: 1 });

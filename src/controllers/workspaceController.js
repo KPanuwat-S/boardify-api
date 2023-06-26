@@ -31,7 +31,10 @@ exports.createWorkspaceById = async (req, res, next) => {
 };
 exports.deleteWorkspaceById = async (req, res, next) => {
   try {
+    const user = req.user;
     const workspace = req.params;
+    const isAdmin = await workspaceService.findAdminById(workspace.id, user.id);
+    if (isAdmin.length <= 0) createError("Unauthorized", 400);
     if (!workspace.id) createError("Workspace id is required", 400);
     await workspaceService.deleteWorkspaceById(workspace.id);
     res.status(200).json({ msg: "Delete Complete" });

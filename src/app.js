@@ -26,7 +26,7 @@ app.use(
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-// app.use("/auth", authRoute);
+app.use("/auth", authRoute);
 app.use("/workspace", workspaceRoute);
 // app.use("/boards", boardsRoute);
 
