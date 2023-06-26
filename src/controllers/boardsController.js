@@ -7,7 +7,7 @@ exports.createBoard = async (req, res, next) => {
     await boardService.createBoard(value);
 
     res.status(200).json({
-      message: "สร้างสำเร็จ",
+      message: "complete",
       payload: value,
     });
   } catch (err) {

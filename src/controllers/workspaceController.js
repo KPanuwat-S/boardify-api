@@ -66,7 +66,7 @@ exports.updateWorkspace = async (req, res, next) => {
     next(error);
   }
 };
-exports.addMemberWorkspaceBy = async (req, res, next) => {
+exports.addMemberWorkspaceById = async (req, res, next) => {
   try {
     res.status(200).json("hi");
   } catch (error) {
