@@ -30,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       onDelete: "RESTRICT",
-    })
-  }
+    });
+  };
 
   return Comment;
 };

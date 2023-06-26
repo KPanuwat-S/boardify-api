@@ -1,7 +1,7 @@
 const cardService = require("../services/card-service");
 const createError = require("../utils/createError");
 
-exports.getCardsByBoard = async (req, res, next) => {
+exports.getCardsByBoardId = async (req, res, next) => {
   try {
     const board = req.params;
     const cardData = await cardService.findCardsByBoardId(board.id);
