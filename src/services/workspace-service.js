@@ -1,4 +1,4 @@
-const { WorkspaceMember, Board, Workspace } = require("../models");
+const { WorkspaceMember, Board, Workspace, User } = require("../models");
 const { Op } = require("sequelize");
 exports.getWorkspaces = async (id) => {
   const data = await WorkspaceMember.findAll({
@@ -32,3 +32,29 @@ exports.deleteWorkspaceById = (id) => Workspace.destroy({ where: { id } });
 exports.findWorkspaceById = (id) => Workspace.findOne({ where: { id } });
 exports.updateWorkspaceById = (id, name) =>
   Workspace.update({ name }, { where: { id } });
+
+exports.getAllMemberInWorkspace = async (workspaceId) => {
+  const data = await WorkspaceMember.findAll({
+    where: { id: workspaceId },
+    include: [{ model: User, attributes: ["firstName", "lastName", "email"] }],
+  });
+  const users = data.map((el) => {
+    const user = {
+      userId: el.userId,
+      firstName: el.User.firstName,
+      lastName: el.User.lastName,
+      email: el.User.email,
+      isAdmin: el.isAdmin,
+    };
+    return user;
+  });
+  return users;
+};
+
+exports.getWorkspaceById = async (workspaceId) => {
+  const data = await Workspace.findOne({
+    where: { id: workspaceId },
+  });
+
+  return data;
+};
