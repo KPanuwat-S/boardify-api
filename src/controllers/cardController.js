@@ -4,6 +4,7 @@ const createError = require("../utils/createError");
 exports.getCardsByBoardId = async (req, res, next) => {
   try {
     const board = req.params;
+  
     const cardData = await cardService.findCardsByBoardId(board.id);
     const fetchData = cardData.map((el) => {
       const [boardIdData] = el.Boards.map((el) => el.id);
@@ -34,9 +35,6 @@ exports.getCardsByBoardId = async (req, res, next) => {
                 }, 0),
                 dueDate: el.dueDate,
                 commentsNumber: el.Comment,
-                // .reduce((acc, curr) => {
-                //   return (acc += 1);
-                // }, 0),
                 members: el.TaskMembers,
                 numberOfFilesAttached: el.Attachment,
               });
@@ -57,6 +55,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
     });
 
     const [data] = fetchData;
+    console.log("data", data);
     res.status(200).json(data);
   } catch (error) {
     next(error);
@@ -67,9 +66,14 @@ exports.addCard = async (req, res, next) => {
   try {
     //require board_id name position
     const data = req.body;
-    if (!data.name || !data.position) createError("Is require", 400);
+
+    if (!data.name || data.position === undefined)
+      createError("Is require", 400);
+    console.log("req params", req.params);
     const { id } = req.params;
+    console.log("id", id);
     const checkBoardById = await cardService.findBoardById(id);
+    console.log("checkboard", checkBoardById);
     if (!checkBoardById) createError("Not Found", 400);
     const newData = { ...data, boardId: id };
     const cardData = await cardService.createCard(newData);

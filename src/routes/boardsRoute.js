@@ -1,12 +1,11 @@
 const express = require("express");
-
+const authenticate = require("../middlewares/authenticate");
 const boardsController = require("../controllers/boardsController");
 const cardsController = require("../controllers/cardController");
-const authenticate = require("../middlewares/authenticate");
 
 const router = express.Router();
-
-// router.get("/", boardsController.getBaords);
+router.post("/", authenticate, boardsController.createBoard);
+router.get("/:workspaceId", boardsController.getAllBoardsByWorkspaceId);
 router.get("/cards/:id", cardsController.getCardsByBoardId);
 router.post("/cards/:id", cardsController.addCard);
 router.patch("/updateCard/", cardsController.updateNameCard);
