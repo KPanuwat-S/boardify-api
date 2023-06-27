@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       position: {
         type: DataTypes.INTEGER,
+        unique: true,
         allowNull: false,
       },
       dueDate: {
@@ -57,9 +58,9 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
     });
 
-    Task.belongsTo(models.Comment, {
+    Task.hasMany(models.Comment, {
       foreignKey: {
-        name: "commentId",
+        name: "taskId",
         allowNull: false,
       },
       onDelete: "RESTRICT",
