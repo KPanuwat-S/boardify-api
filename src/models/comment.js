@@ -21,12 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: "RESTRICT",
     });
-  };
-
-  Comment.associate = (models) => {
-    Comment.hasMany(models.Task, {
+    
+    Comment.belongsTo(models.Task, {
       foreignKey: {
-        name: "commentId",
+        name: "taskId",
         allowNull: false,
       },
       onDelete: "RESTRICT",
