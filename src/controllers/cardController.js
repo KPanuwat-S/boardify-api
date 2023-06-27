@@ -13,9 +13,9 @@ exports.getCardsByBoardId = async (req, res, next) => {
       const [cardsData] = el.Boards.map((el) => {
         const newCardData = el.Cards.map((el) => {
           taskData = {
-            cardID: el.id,
-            cardName: el.name,
-            cardPosition: el.position,
+            id: el.id,
+            name: el.name,
+            position: el.position,
             tasks: el.Tasks.map((el) => {
               return (taskDetailData = {
                 taskId: el.id,
