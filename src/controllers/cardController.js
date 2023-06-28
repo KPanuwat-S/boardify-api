@@ -1,3 +1,4 @@
+const { sequelize } = require("../models");
 const cardService = require("../services/card-service");
 const createError = require("../utils/createError");
 
@@ -103,25 +104,41 @@ exports.updateNameCard = async (req, res, next) => {
 };
 
 exports.deleteCard = async (req, res, next) => {
-  //require cardId
+  const t = await sequelize.transaction();
   try {
     const cardId = req.params;
     if (!cardId) createError("CardId is require");
-    const deleteData = await cardService.deleteCardById(cardId);
-    if (deleteData) {
-      return res.status(200).json({ msg: "Delete is Complete" });
-    } else {
-      return res.status(200).json({ msg: "Not found" });
+    const [allData] = await cardService.findTaskByCardId(cardId.id);
+    if (!allData) createError("Not found", 400);
+    // if (allData.Comments.length > 0) {
+    //   for (const data of allData.Comments) {
+    //     const resComments = await cardService.deleteComments(data.id, t));
+    //   }
+    //   if (!resComments) createError("TasksMember delete fail", 400);
+    // }
+    if (allData.Attachment) {
+      const resAttachment = await cardService.deleteAttachment(
+        allData.Attachment.id,
+        t
+      );
+      if (!resAttachment) createError("Attachment delete fail", 400);
     }
+    if (allData.TaskMembers.length > 0) {
+      for (const data of allData.TaskMembers) {
+        const resTasksMember = await cardService.deleteTaskMembers(data.id, t);
+        if (!resTasksMember) createError("TasksMember delete fail", 400);
+      }
+    }
+    if (allData.id) {
+      const taskData = await cardService.deleteTaskById(allData.id, t);
+      if (!taskData) createError("Task delete fail", 400);
+    }
+    const resCard = await cardService.deleteCardById(cardId.id, t);
+    if (!resCard) createError("Card delete fail", 400);
+    await t.commit();
+    res.status(200).json({ msg: "Delete Complete" });
   } catch (error) {
-    next(error);
-  }
-};
-
-exports.test = async (req, res, next) => {
-  try {
-    res.json(req.body);
-  } catch (error) {
+    await t.rollback();
     next(error);
   }
 };
