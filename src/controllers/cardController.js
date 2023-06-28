@@ -1,6 +1,7 @@
 const { sequelize } = require("../models");
 const cardService = require("../services/card-service");
 const createError = require("../utils/createError");
+const createError = require("../utils/createError");
 
 exports.getCardsByBoardId = async (req, res, next) => {
   try {
@@ -63,7 +64,6 @@ exports.getCardsByBoardId = async (req, res, next) => {
     next(error);
   }
 };
-
 exports.addCard = async (req, res, next) => {
   try {
     //require board_id name position
@@ -79,15 +79,14 @@ exports.addCard = async (req, res, next) => {
     next(error);
   }
 };
-
 exports.updateNameCard = async (req, res, next) => {
   // require (name||type) || position , cardId
   // require source = [index,data] , destination = [index,data] , itemSource = [index,data,taskId] , itemDestination = [index,data,]
   try {
     const data = req.body;
-    console.log(data);
+    const boardId = req.params;
     const checkCardById = await cardService.findCardById(
-      data.boardId,
+      boardId.id,
       data.cardId
     );
     if (!checkCardById) createError("Not found", 400);
@@ -102,7 +101,6 @@ exports.updateNameCard = async (req, res, next) => {
     next(error);
   }
 };
-
 exports.deleteCard = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {

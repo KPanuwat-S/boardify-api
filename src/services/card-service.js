@@ -92,12 +92,12 @@ exports.findBoardById = (boardId) =>
   });
 exports.createCard = (data) => Card.create(data);
 ////update
-exports.findCardById = (boardId, cardId) => {
+exports.findCardById = (boardId, id) => {
   return Board.findOne({
     where: { id: boardId },
     include: {
       model: Card,
-      where: { [Op.and]: [{ id: cardId }, { boardId }] },
+      where: { [Op.and]: [{ id }, { boardId }] },
     },
   });
 };

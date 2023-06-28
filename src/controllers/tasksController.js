@@ -69,7 +69,6 @@ exports.updateTask = async (req, res, next) => {
     next(error);
   }
 };
-
 ///attachment
 exports.addAttachment = async (req, res, next) => {
   const t = await sequelize.transaction();

@@ -12,7 +12,6 @@ exports.getAllWorkspaces = async (req, res, next) => {
     next(err);
   }
 };
-
 exports.getOneWorkSpace = async (req, res, next) => {
   try {
     const { workspaceId } = req.params;
@@ -22,7 +21,18 @@ exports.getOneWorkSpace = async (req, res, next) => {
     next(err);
   }
 };
-
+exports.getAllMembersInWorkspace = async (req, res, next) => {
+  try {
+    const { workspaceId } = req.params;
+    console.log("workspace id", workspaceId);
+    const members = await workspaceService.getAllMembersInWorkspace(
+      workspaceId
+    );
+    res.status(200).json({ members });
+  } catch (err) {
+    next(err);
+  }
+};
 exports.createWorkspaceById = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
@@ -80,23 +90,11 @@ exports.updateWorkspace = async (req, res, next) => {
     next(error);
   }
 };
-exports.addMemberWorkspaceBy = async (req, res, next) => {
+/// ****
+exports.addMemberWorkspaceById = async (req, res, next) => {
   try {
     res.status(200).json("hi");
   } catch (error) {
     next(error);
-  }
-};
-
-exports.getAllMembersInWorkspace = async (req, res, next) => {
-  try {
-    const { workspaceId } = req.params;
-    console.log("workspace id", workspaceId);
-    const members = await workspaceService.getAllMembersInWorkspace(
-      workspaceId
-    );
-    res.status(200).json({ members });
-  } catch (err) {
-    next(err);
   }
 };
