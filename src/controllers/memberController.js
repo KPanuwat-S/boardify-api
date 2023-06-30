@@ -1,5 +1,4 @@
-
-const { workspaceMember } = require("../models");
+const { WorkspaceMember } = require("../models");
 const { User } = require("../models");
 const memberService = require("../services/memberService");
 
@@ -33,10 +32,32 @@ exports.searchAddMember = async (req, res, next) => {
 
 exports.addMember = async (req, res, next) => {
   try {
-    const { id } = req.body;
+    const { workspaceId, memberAll } = req.body;
+    console.log("addMember value: ", workspaceId, memberAll);
 
-    // const member = await
+    for (const data of memberAll) {
+      if (WorkspaceMember.findOne({ where: { userId: data.id } })) {
+        // console.log("ssss", data);
+        console.log("It's already have member.");
+        return;
+      }
+      await WorkspaceMember.create({
+        workspaceId,
+        isAdmin: 0,
+        userId: data.id,
+      });
+    }
+
+    res.status(200).json("Success");
   } catch (error) {
     next(error);
   }
 };
+
+exports.getWorkspaceMember = async (req, res, next) => {
+  try {
+    
+  } catch (error) {
+    next(error)
+  }
+}
