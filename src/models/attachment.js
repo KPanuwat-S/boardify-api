@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     Attachment.hasMany(models.Task, {
       foreignKey: {
         name: "attachmentId",
-        allowNull: false,
+        allowNull: true,
       },
       onDelete: "RESTRICT",
     });
