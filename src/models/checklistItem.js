@@ -10,10 +10,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      dueDate: {
-        type: DataTypes.DATEONLY,
-        allowNull: true,
-      }
     },
     {
       underscored: true,
