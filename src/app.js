@@ -12,6 +12,7 @@ const authRoute = require("./routes/authRoute");
 const boardsRoute = require("./routes/boardsRoute");
 const workspaceRoute = require("./routes/workspaceRoute");
 const authenticate = require("./middlewares/authenticate");
+const memberRoute = require("./routes/memberRoute");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use("/auth", authRoute);
 app.use("/workspaces", authenticate, workspaceRoute);
 app.use("/boards", authenticate, boardsRoute);
+app.use("/member", memberRoute);
 
 // app.use("/", res.send({ message: "Hi Boardify" }));
 
