@@ -59,12 +59,14 @@ exports.getWorkspaceMember = async (req, res, next) => {
     const workspaceId = req.params;
     console.log("......id", workspaceId);
 
-    const data = await WorkspaceMember.findAll({
+    const [data] = await WorkspaceMember.findAll({
       where: { workspaceId: workspaceId.id },
       include: { model: User },
     });
 
-    res.status(200).json("Success");
+    console.log("..... : " , data);
+
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }
