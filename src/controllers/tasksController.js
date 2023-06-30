@@ -40,12 +40,6 @@ exports.updateTask = async (req, res, next) => {
     const user = req.user;
     console.log("data from be", data);
 
-    if (data.CheckListItems.length > 0) {
-      
-    }
-
-
-
     if (!id) createError("Task id is required", 400);
     console.log("updateTaskinBackend is running");
     const taskData = await taskService.updateTaskById(
@@ -77,6 +71,44 @@ exports.updateTask = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.addChecklist = async (req, res, next) => {
+  const data = req.body;
+  const { id } = req.params;
+  try {
+    const response = await taskService.addChecklist(data);
+    res.status(200).json(response);
+  } catch (err) {
+    next(err);
+  }
+  // }
+  // if (data.ChecklistItems.find((el) => el.id !== undefined)) {
+  //   const [checklistEdited] = data.ChecklistItems;
+  //   console.log("checklistEdited", checklistEdited);
+  //   await taskService.updateChecklistItems(checklistEdited);
+  // }
+};
+
+exports.editChecklist = async (req, res, next) => {
+  const data = req.body;
+  // const { id } = req.params;
+  try {
+    await taskService.updateChecklistItems(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteChecklistById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    await taskService.deleteChecklist(id);
+    res.status(204);
+  } catch (err) {
+    next(err);
+  }
+};
+
 ///attachment
 exports.addAttachment = async (req, res, next) => {
   const t = await sequelize.transaction();

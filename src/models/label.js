@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
     }
   );
-
+  
   Label.associate = (models) => {
     Label.hasMany(models.Task, {
       foreignKey: {

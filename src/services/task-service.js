@@ -111,4 +111,26 @@ exports.updateAttachmentIdInTask = (attachmentId, t) =>
     { where: { attachmentId }, transaction: t }
   );
 
+// Checklist
+exports.addChecklist = (checklistObject) => {
+  ChecklistItem.create({
+    description: checklistObject.description,
+    // isChecked: checklistObject.isChecked,
+    taskId: checklistObject.taskId,
+  });
+  console.log("checklistObject", checklistObject);
+};
+exports.updateChecklistItems = (checklistObject) =>
+  ChecklistItem.update(
+    {
+      description: checklistObject.description,
+      isChecked: checklistObject.isChecked,
+      taskId: checklistObject.taskId,
+    },
+    { where: { id: checklistObject.id } }
+  );
+
+exports.deleteChecklist = (checklistId) => {
+  ChecklistItem.destroy({ where: { id: checklistId } });
+};
 // exports.findTask = (id) => Task.id
