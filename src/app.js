@@ -9,6 +9,9 @@ const notFoundMiddleware = require("./middlewares/notFound");
 const errorMiddleware = require("./middlewares/error");
 // const boardsRoute = require("./route/boardsRoute");
 const authRoute = require("./routes/authRoute");
+const boardsRoute = require("./routes/boardsRoute");
+const workspaceRoute = require("./routes/workspaceRoute");
+const authenticate = require("./middlewares/authenticate");
 const memberRoute = require("./routes/memberRoute")
 
 if (process.env.NODE_ENV === "development") {
@@ -27,8 +30,10 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoute);
+app.use("/workspaces", authenticate, workspaceRoute);
+app.use("/boards", authenticate, boardsRoute);
 app.use("/member", memberRoute)
-// app.use("/boards", boardsRoute);
+
 // app.use("/", res.send({ message: "Hi Boardify" }));
 
 app.use(notFoundMiddleware);
