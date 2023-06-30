@@ -19,10 +19,12 @@ router.delete("/cards/:id", cardsController.deleteCard);
 router.patch("/test", cardsController.test);
 router.patch("/updateCard/:id", cardsController.updateNameCard);
 
-
+router.post("/tasks/checklists", taskController.addChecklist);
+router.patch("/tasks/checklists", taskController.editChecklist);
 router.get("/tasks/:id", taskController.getTaskById);
 router.patch("/tasks/:id", taskController.updateTask);
 router.delete("/tasks/:id", taskController.deleteTaskById);
+router.delete("/tasks/checklists/:id", taskController.deleteChecklistById);
 
 //require taskId
 router.post(
