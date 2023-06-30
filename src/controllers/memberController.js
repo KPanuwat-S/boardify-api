@@ -59,14 +59,25 @@ exports.getWorkspaceMember = async (req, res, next) => {
     const workspaceId = req.params;
     console.log("......id", workspaceId);
 
-    const [data] = await WorkspaceMember.findAll({
+    const data = await WorkspaceMember.findAll({
       where: { workspaceId: workspaceId.id },
       include: { model: User },
     });
 
-    console.log("..... : " , data);
+    console.log("..... : ", data);
 
     res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getCountBoardMember = async (req, res, next) => {
+  try {
+    const data = req.query
+    console.log("data : ",data);
+
+    res.json(data)
   } catch (error) {
     next(error);
   }
