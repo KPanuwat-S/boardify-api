@@ -56,8 +56,16 @@ exports.addMember = async (req, res, next) => {
 
 exports.getWorkspaceMember = async (req, res, next) => {
   try {
-    
+    const workspaceId = req.params;
+    console.log("......id", workspaceId);
+
+    const data = await WorkspaceMember.findAll({
+      where: { workspaceId: workspaceId.id },
+      include: { model: User },
+    });
+
+    res.status(200).json("Success");
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
