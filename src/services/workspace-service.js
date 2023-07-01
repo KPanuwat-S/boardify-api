@@ -9,7 +9,16 @@ exports.getWorkspaces = async (id) => {
   // expected {user:, workspaces:[workspace: {id}],}
   return data;
 };
-exports.createWorkspace = (name, userId) => Workspace.create({ userId, name });
+
+exports.createWorkspace = (name, userId, t) =>
+  Workspace.create({ userId, name }, { transaction: t });
+exports.createMemberByAdminId = (workspaceId, userId, t) =>
+  WorkspaceMember.create(
+    { userId, workspaceId, isAdmin: 1 },
+    { transaction: t }
+  );
+exports.createMemberByUserId = (userId, workspaceId) =>
+  WorkspaceMember.create({ userId, workspaceId, isAdmin: 0 });
 
 exports.findMemberById = (workspaceId, userId) =>
   WorkspaceMember.findAll({
@@ -19,10 +28,17 @@ exports.findMemberById = (workspaceId, userId) =>
       where: { [Op.and]: [{ id: workspaceId }, { userId }] },
     },
   });
+
 exports.findAdminById = (workspaceId, userId) =>
-  Workspace.findAll({
+  Workspace.findOne({
     where: { [Op.and]: [{ id: workspaceId }, { userId }] },
   });
+exports.deleteMemberWorkspaceById = (workspaceId, t) =>
+  WorkspaceMember.destroy({ where: { workspaceId }, transaction: t });
+
+exports.deleteWorkspaceById = (id, t) =>
+  Workspace.destroy({ where: { id }, transaction: t });
+/////////update
 
 exports.createMemberByAdminId = (workspaceId, userId) =>
   WorkspaceMember.create({ userId, workspaceId, isAdmin: 1 });
