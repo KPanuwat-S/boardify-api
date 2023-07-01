@@ -33,7 +33,7 @@ app.use("/auth", authRoute);
 app.use("/workspaces", authenticate, workspaceRoute);
 app.use("/boards", authenticate, boardsRoute);
 app.use("/member", memberRoute);
-app.use("/myprofile", myProfileRoute);
+app.use("/myProfile", myProfileRoute);
 // app.use("/", res.send({ message: "Hi Boardify" }));
 
 app.use(notFoundMiddleware);

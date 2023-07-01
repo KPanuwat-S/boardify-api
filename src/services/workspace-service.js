@@ -10,13 +10,9 @@ exports.getWorkspaces = async (id) => {
   return data;
 };
 
-exports.createWorkspace = (name, userId, t) =>
-  Workspace.create({ userId, name }, { transaction: t });
-exports.createMemberByAdminId = (workspaceId, userId, t) =>
-  WorkspaceMember.create(
-    { userId, workspaceId, isAdmin: 1 },
-    { transaction: t }
-  );
+exports.createWorkspace = (name, userId) => Workspace.create({ userId, name });
+exports.createMemberByAdminId = (workspaceId, userId) =>
+  WorkspaceMember.create({ userId, workspaceId, isAdmin: 1 });
 exports.createMemberByUserId = (userId, workspaceId) =>
   WorkspaceMember.create({ userId, workspaceId, isAdmin: 0 });
 
