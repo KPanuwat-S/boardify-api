@@ -18,7 +18,7 @@ module.exports = (sequelize, Datatypes) => {
         name: "boardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

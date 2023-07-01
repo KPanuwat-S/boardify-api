@@ -22,7 +22,7 @@ module.exports = (sequelize, Datatypes) => {
         name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

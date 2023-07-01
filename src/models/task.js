@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      type: {
+        type: DataTypes.STRING,
+      }
     },
     {
       underscored: true,
@@ -39,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "cardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Task.belongsTo(models.Label, {
@@ -47,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "labelId",
         allowNull: true,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Task.belongsTo(models.Attachment, {
@@ -55,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "attachmentId",
         allowNull: true,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Task.hasMany(models.Comment, {
@@ -63,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Task.hasMany(models.ChecklistItem, {
@@ -71,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Task.hasMany(models.TaskMember, {
@@ -79,7 +82,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

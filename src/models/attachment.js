@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "attachmentId",
         allowNull: true,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 
