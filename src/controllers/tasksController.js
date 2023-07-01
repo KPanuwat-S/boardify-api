@@ -9,6 +9,7 @@ exports.getTaskById = async (req, res, next) => {
 
     const taskData = await taskService.findTaskById(task.id);
 
+    console.log("taskData", taskData);
     const [[[newData]]] = await taskData.Boards.map((el) => {
       return (newTaskId = el.Cards.map((el) => {
         return el.Tasks;
@@ -21,6 +22,22 @@ exports.getTaskById = async (req, res, next) => {
   }
 };
 // ***
+
+exports.addTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { taskName, position } = req.body;
+    const user = req.user;
+
+    const input = { name: taskName, position, userId: user.id, cardId: id };
+    console.log("input", input);
+    const addedTask = await taskService.addTask(input);
+    res.status(200).json(addedTask);
+  } catch (err) {
+    next(err);
+  }
+};
+//
 exports.deleteTaskById = async (req, res, next) => {
   try {
     const taskId = req.params;

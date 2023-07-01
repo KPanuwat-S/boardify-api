@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(
   rateLimit({
     windowMs: 60 * 1000 * 15,
-    max: 1000,
+    max: 10000,
     message: {
       message: "too many request",
     },

@@ -4,7 +4,7 @@ const createError = require("../utils/createError");
 exports.getCardsByBoardId = async (req, res, next) => {
   try {
     const board = req.params;
-  
+
     const cardData = await cardService.findCardsByBoardId(board.id);
     const fetchData = cardData.map((el) => {
       const [boardIdData] = el.Boards.map((el) => el.id);
@@ -20,12 +20,13 @@ exports.getCardsByBoardId = async (req, res, next) => {
               return (taskDetailData = {
                 taskId: el.id,
                 taskName: el.name,
-                taskDescription: el.description,
+                taskDescription: el?.description,
                 taskPosition: el.position,
-                labelColor: el.Label.color,
-                labelDescription: el.Label.description,
-                checkListsTotal: el.ChecklistItems.length,
-                checkListsChecked: el.ChecklistItems.reduce((acc, curr) => {
+                // labelId: el.Label?.id,
+                labelColor: el.Label?.color,
+                labelDescription: el.Label?.description,
+                checkListsTotal: el.ChecklistItems?.length,
+                checkListsChecked: el.ChecklistItems?.reduce((acc, curr) => {
                   if (curr.isChecked) {
                     return (acc += 1);
                   } else if (!curr.isChecked) {

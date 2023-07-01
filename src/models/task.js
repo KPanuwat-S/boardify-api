@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       position: {
         type: DataTypes.INTEGER,
-        unique: true,
+        // unique: true,
         allowNull: false,
       },
       dueDate: {
@@ -45,12 +45,12 @@ module.exports = (sequelize, DataTypes) => {
     Task.belongsTo(models.Label, {
       foreignKey: {
         name: "labelId",
-        allowNull: true,
+        // allowNull: true,
       },
       onDelete: "RESTRICT",
     });
 
-    Task.belongsTo(models.Attachment, {
+    Task.hasOne(models.Attachment, {
       foreignKey: {
         name: "attachmentId",
         allowNull: true,
