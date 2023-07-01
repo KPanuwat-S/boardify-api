@@ -13,6 +13,7 @@ const boardsRoute = require("./routes/boardsRoute");
 const workspaceRoute = require("./routes/workspaceRoute");
 const authenticate = require("./middlewares/authenticate");
 const memberRoute = require("./routes/memberRoute");
+const myProfileRoute = require("./routes/myProfileRoute");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
@@ -32,7 +33,7 @@ app.use("/auth", authRoute);
 app.use("/workspaces", authenticate, workspaceRoute);
 app.use("/boards", authenticate, boardsRoute);
 app.use("/member", memberRoute);
-
+app.use("/myprofile", myProfileRoute);
 // app.use("/", res.send({ message: "Hi Boardify" }));
 
 app.use(notFoundMiddleware);

@@ -10,13 +10,22 @@ exports.getTaskById = async (req, res, next) => {
     const taskData = await taskService.findTaskById(task.id);
 
     console.log("taskData", taskData);
-    const [[[newData]]] = await taskData.Boards.map((el) => {
-      return (newTaskId = el.Cards.map((el) => {
-        return el.Tasks;
-      }));
+    // const [[[newData]]] = await taskData.Boards.map((el) => {
+    //   return (newTaskId = el.Cards?.map((el) => {
+    //     return el.Tasks;
+    //   }));
+    // });
+    const newData = await taskData.Boards.map((el) => {
+      if (el.Cards.length > 0)
+        return (newTaskId = el.Cards?.map((el) => {
+          return el.Tasks;
+        }));
+      return;
     });
 
-    res.status(200).json(newData);
+    const [[[toBeSentData]]] = newData.filter((value) => value != null);
+    res.status(200).json(toBeSentData);
+    // res.status(200).json(taskData);
   } catch (error) {
     next(error);
   }
