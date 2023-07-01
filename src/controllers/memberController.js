@@ -90,7 +90,7 @@ exports.deleteWorkspaceMember = async (req, res, next) => {
   try {
     const workspaceId = req.params;
 
-    await BoardMember.destroy()
+    await BoardMember.destroy({include: {model: Board}, where: {}})
 
     console.log(workspaceId);
     res.status(200).json(workspaceId)
