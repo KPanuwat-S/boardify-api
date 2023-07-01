@@ -1,6 +1,6 @@
-const { WorkspaceMember } = require("../models");
-const { User } = require("../models");
+const { WorkspaceMember, Board, User, BoardMember } = require("../models");
 const memberService = require("../services/memberService");
+const createError = require("../utils/createError");
 
 exports.searchUser = async (req, res, next) => {
   try {
@@ -9,7 +9,7 @@ exports.searchUser = async (req, res, next) => {
 
     const email = await memberService.filterAllUser(value);
 
-    console.log(email);
+    // console.log(email);
     res.status(200).json(email);
   } catch (error) {
     next(error);
@@ -19,7 +19,7 @@ exports.searchUser = async (req, res, next) => {
 exports.searchAddMember = async (req, res, next) => {
   try {
     const { value } = req.query;
-    console.log(value);
+    // console.log(value);
 
     const member = await memberService.filterMember(value);
 
@@ -38,7 +38,7 @@ exports.addMember = async (req, res, next) => {
     for (const data of memberAll) {
       if (WorkspaceMember.findOne({ where: { userId: data.id } })) {
         // console.log("ssss", data);
-        console.log("It's already have member.");
+        // console.log("It's already have member.");
         return;
       }
       await WorkspaceMember.create({
@@ -57,28 +57,44 @@ exports.addMember = async (req, res, next) => {
 exports.getWorkspaceMember = async (req, res, next) => {
   try {
     const workspaceId = req.params;
-    console.log("......id", workspaceId);
+    // console.log("......id", workspaceId);
 
     const data = await WorkspaceMember.findAll({
       where: { workspaceId: workspaceId.id },
       include: { model: User },
     });
 
-    console.log("..... : ", data);
+    const count = await Promise.all(
+      data.map((el) =>
+        BoardMember.count({
+          include: { model: Board },
+          where: { userId: el.userId },
+        })
+      )
+    );
 
-    res.status(200).json(data);
+    const newData = data.map((el, index) => ({
+      ...el.toJSON(), // Convert the Sequelize instance to a plain JavaScript object
+      count: count[index], // Add the corresponding count value
+    }));
+
+    // console.log(newData);
+
+    res.status(200).json(newData);
   } catch (error) {
     next(error);
   }
 };
 
-exports.getCountBoardMember = async (req, res, next) => {
+exports.deleteWorkspaceMember = async (req, res, next) => {
   try {
-    const data = req.query
-    console.log("data : ",data);
+    const workspaceId = req.params;
 
-    res.json(data)
+    await BoardMember.destroy()
+
+    console.log(workspaceId);
+    res.status(200).json(workspaceId)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
