@@ -100,10 +100,11 @@ exports.deleteWorkspaceMember = async (req, res, next) => {
 
     if (id.userId == BoardMember.userId) {
       await BoardMember.destroy({
-        include: { model: Board },
         where: { userId: id.userId },
+        include: { model: Board },
       });
     }
+    // console.log("U hooo");
 
     await WorkspaceMember.destroy({
       include: { model: Workspace },
