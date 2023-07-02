@@ -15,31 +15,31 @@ const {
 
 exports.findTaskById = (id) => {
   return Workspace.findOne({
-    attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+    attributes: { exclude: ["createdAt", "updatedAt"] },
     include: {
       model: Board,
 
-      attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
 
       include: [
         {
           model: Card,
 
           attributes: {
-            exclude: ["createdAt", "updatedAt", "deletedAt", "boardId"],
+            exclude: ["createdAt", "updatedAt", "boardId"],
           },
 
           include: {
             model: Task,
             where: { id },
             attributes: {
-              exclude: ["createdAt", "updatedAt", "deletedAt", "cardId"],
+              exclude: ["createdAt", "updatedAt", "cardId"],
             },
             include: [
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt", "id"],
+                  exclude: ["createdAt", "updatedAt", "id"],
                 },
               },
               {
@@ -48,19 +48,19 @@ exports.findTaskById = (id) => {
               {
                 model: Comment,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
               {
                 model: TaskMember,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
               {
                 model: Attachment,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
             ],
