@@ -9,18 +9,44 @@ exports.getTaskById = async (req, res, next) => {
 
     const taskData = await taskService.findTaskById(task.id);
 
-    const [[[newData]]] = await taskData.Boards.map((el) => {
-      return (newTaskId = el.Cards.map((el) => {
-        return el.Tasks;
-      }));
+    console.log("taskData", taskData);
+    // const [[[newData]]] = await taskData.Boards.map((el) => {
+    //   return (newTaskId = el.Cards?.map((el) => {
+    //     return el.Tasks;
+    //   }));
+    // });
+    const newData = await taskData.Boards.map((el) => {
+      if (el.Cards.length > 0)
+        return (newTaskId = el.Cards?.map((el) => {
+          return el.Tasks;
+        }));
+      return;
     });
 
-    res.status(200).json(newData);
+    const [[[toBeSentData]]] = newData.filter((value) => value != null);
+    res.status(200).json(toBeSentData);
+    // res.status(200).json(taskData);
   } catch (error) {
     next(error);
   }
 };
 // ***
+
+exports.addTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { taskName, position } = req.body;
+    const user = req.user;
+
+    const input = { name: taskName, position, userId: user.id, cardId: id };
+    console.log("input", input);
+    const addedTask = await taskService.addTask(input);
+    res.status(200).json(addedTask);
+  } catch (err) {
+    next(err);
+  }
+};
+//
 exports.deleteTaskById = async (req, res, next) => {
   try {
     const taskId = req.params;

@@ -22,13 +22,13 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
     });
 
-    Attachment.hasMany(models.Task, {
-      foreignKey: {
-        name: "attachmentId",
-        allowNull: false,
-      },
-      onDelete: "RESTRICT",
-    });
+    // Attachment.hasOne(models.Task, {
+    //   foreignKey: {
+    //     name: "attachmentId",
+    //     allowNull: true,
+    //   },
+    //   onDelete: "RESTRICT",
+    // });
   };
 
   return Attachment;
