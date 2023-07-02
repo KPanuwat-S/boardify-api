@@ -4,7 +4,6 @@ module.exports = (sequelize, Datatypes) => {
     {},
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
