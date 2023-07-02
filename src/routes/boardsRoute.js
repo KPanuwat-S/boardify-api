@@ -20,6 +20,7 @@ router.patch("/test", cardsController.test);
 router.patch("/updateCard/:id", cardsController.updateNameCard);
 
 router.post("/tasks/checklists", taskController.addChecklist);
+router.post("/tasks/:id", taskController.addTask);
 router.patch("/tasks/checklists", taskController.editChecklist);
 router.get("/tasks/:id", taskController.getTaskById);
 router.patch("/tasks/:id", taskController.updateTask);
