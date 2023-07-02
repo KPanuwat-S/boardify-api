@@ -8,6 +8,6 @@ router.get("/searchUser", memberController.searchUser);
 router.get("/searchAddMember", memberController.searchAddMember);
 router.post("/addMember", memberController.addMember);
 router.get("/getWorkspaceMember/:id", memberController.getWorkspaceMember);
-router.delete("/deleteWorkspaceMember/:id", memberController.deleteWorkspaceMember);
+router.delete("/deleteWorkspaceMember/", memberController.deleteWorkspaceMember);
 
 module.exports = router;
