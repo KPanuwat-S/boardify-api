@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     Label.hasMany(models.Task, {
       foreignKey: {
         name: "labelId",
-        allowNull: true,
+        // allowNull: true,
       },
       onDelete: "CASCADE",
     });

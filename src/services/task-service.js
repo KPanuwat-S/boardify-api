@@ -71,6 +71,8 @@ exports.findTaskById = (id) => {
   });
 };
 
+exports.addTask = (input) => Task.create(input);
+
 exports.deleteTaskById = (id) => Task.destroy({ where: { id } });
 
 exports.updateTaskById = (
@@ -113,6 +115,7 @@ exports.updateAttachmentIdInTask = (attachmentId, t) =>
 
 // Checklist
 exports.addChecklist = (checklistObject) => {
+  console.log("addchecklist");
   ChecklistItem.create({
     description: checklistObject.description,
     // isChecked: checklistObject.isChecked,
