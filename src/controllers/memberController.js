@@ -98,7 +98,9 @@ exports.deleteWorkspaceMember = async (req, res, next) => {
   try {
     const id = req.query;
 
-    const [boardMemberId] = await BoardMember.findAll({where: {userId: id.userId}})
+    const [boardMemberId] = await BoardMember.findAll({
+      where: { userId: id.userId },
+    });
     // console.log("--------aaa",boardMemberId);
     // console.log("--------bbb",boardMemberId.userId);
 
@@ -114,8 +116,28 @@ exports.deleteWorkspaceMember = async (req, res, next) => {
       where: { userId: id.userId },
     });
 
-    console.log("---------id",id);
+    console.log("---------id", id);
     res.status(200).json(id);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getMemberRole = async (req, res, next) => {
+  try {
+    const id = req.query;
+
+    const [workspace] = await WorkspaceMember.findAll({
+      where: { userId: id.authUserId },
+    });
+    console.log("------isAdmin", workspace.id);
+
+    if (id.authUserId == workspace.id && workspace.isAdmin == true) {
+      return res.status(200).json(workspace.isAdmin);
+    } 
+
+    // console.log("roleMember--------- :", id);
+    res.status(200).json(workspace);
   } catch (error) {
     next(error);
   }
