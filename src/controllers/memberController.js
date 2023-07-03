@@ -98,20 +98,23 @@ exports.deleteWorkspaceMember = async (req, res, next) => {
   try {
     const id = req.query;
 
-    if (id.userId == BoardMember.userId) {
+    const [boardMemberId] = await BoardMember.findAll({where: {userId: id.userId}})
+    // console.log("--------aaa",boardMemberId);
+    // console.log("--------bbb",boardMemberId.userId);
+
+    if (id.userId == boardMemberId.userId) {
       await BoardMember.destroy({
-        where: { userId: id.userId },
         include: { model: Board },
+        where: { userId: id.userId },
       });
     }
-    // console.log("U hooo");
 
     await WorkspaceMember.destroy({
       include: { model: Workspace },
       where: { userId: id.userId },
     });
 
-    console.log(id);
+    console.log("---------id",id);
     res.status(200).json(id);
   } catch (error) {
     next(error);
