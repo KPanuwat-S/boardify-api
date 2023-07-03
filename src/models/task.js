@@ -7,16 +7,20 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
       },
       position: {
         type: DataTypes.INTEGER,
-        unique: true,
         allowNull: false,
       },
       dueDate: {
         type: DataTypes.DATE,
         allowNull: false,
+      },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: new Date(),
       },
     },
     {

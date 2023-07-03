@@ -21,20 +21,17 @@ exports.findCardsByBoardId = (boardId) => {
       model: Board,
       where: { id: boardId },
       attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
-
       include: [
         {
           model: BoardMember,
           attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         },
-
         {
           model: Card,
           where: { boardId: boardId },
           attributes: {
             exclude: ["createdAt", "updatedAt", "deletedAt", "boardId"],
           },
-
           include: {
             model: Task,
             attributes: {
@@ -90,7 +87,15 @@ exports.findBoardById = (boardId) =>
   Board.findOne({
     where: { id: boardId },
   });
+exports.findCardMaxPosition = (boardId) => {
+  return Card.findAll({
+    where: { boardId },
+    order: [[sequelize.literal("position"), "DESC"]],
+    limit: 1,
+  });
+};
 exports.createCard = (data) => Card.create(data);
+//updateName
 ////update
 exports.findCardById = (boardId, id) => {
   return Board.findOne({
@@ -101,12 +106,21 @@ exports.findCardById = (boardId, id) => {
     },
   });
 };
-exports.updateCard = (data, name, position) =>
-  Card.update({ name, position }, { where: { id: data.id } });
+//update Dnd
+exports.updateCard = (card, index, boardId) => {
+  console.log(card, index, boardId);
+  Card.update(
+    { position: +index + 1 },
+    { where: { boardId, id: card.cardId } }
+  );
+};
+exports.updateTask = (data, index, cardId) =>
+  Task.update({ position: +index + 1, cardId }, { where: { id: data.taskId } });
+
 ///delete
 exports.findTaskByCardId = (cardId) => {
-  return Task.findAll({
-    where: { cardId },
+  return Card.findAll({
+    where: { id: cardId },
     attributes: {
       exclude: [
         "createdAt",
@@ -114,30 +128,38 @@ exports.findTaskByCardId = (cardId) => {
         "deletedAt",
         "name",
         "description",
-        "position",
-        "dueDate",
-        "labelId",
+
         "userId",
       ],
     },
-    include: [
-      {
-        model: TaskMember,
-        attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
-      },
-      {
-        model: Attachment,
-        attributes: {
-          exclude: ["createdAt", "updatedAt", "deletedAt", "file", "userId"],
+    include: {
+      model: Task,
+      where: { cardId },
+      include: [
+        {
+          model: TaskMember,
+          attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
         },
-      },
-      {
-        model: Comment,
-        attributes: {
-          exclude: ["createdAt", "updatedAt", "deletedAt", "comment", "userId"],
+        {
+          model: Attachment,
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "deletedAt", "file", "userId"],
+          },
         },
-      },
-    ],
+        {
+          model: Comment,
+          attributes: {
+            exclude: [
+              "createdAt",
+              "updatedAt",
+              "deletedAt",
+              "comment",
+              "userId",
+            ],
+          },
+        },
+      ],
+    },
   });
 };
 exports.deleteCardById = (id, t) => {

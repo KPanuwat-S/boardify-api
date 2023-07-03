@@ -1,7 +1,7 @@
 const { WorkspaceMember, Board, Workspace, User } = require("../models");
 const { Op } = require("sequelize");
 exports.getWorkspaces = async (id) => {
-  const data = await WorkspaceMember.findAll({
+  return await WorkspaceMember.findAll({
     where: { userId: id },
     include: [{ model: Workspace, include: { model: Board } }],
   });

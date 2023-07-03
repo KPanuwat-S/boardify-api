@@ -6,7 +6,6 @@ exports.getAllWorkspaces = async (req, res, next) => {
   try {
     const user = req.user;
     const workspacesData = await workspaceService.getWorkspaces(user.id);
-
     res.status(200).json(workspacesData);
   } catch (err) {
     next(err);
@@ -24,7 +23,7 @@ exports.getOneWorkSpace = async (req, res, next) => {
 exports.getAllMembersInWorkspace = async (req, res, next) => {
   try {
     const { workspaceId } = req.params;
-    console.log("workspace id", workspaceId);
+
     const members = await workspaceService.getAllMembersInWorkspace(
       workspaceId
     );
