@@ -24,28 +24,31 @@ exports.getOneWorkSpace = async (req, res, next) => {
 };
 
 exports.createWorkspaceById = async (req, res, next) => {
-  const t = await sequelize.transaction();
+  // const t = await sequelize.transaction();
   try {
     const user = req.user;
     const data = req.body;
-    const result = await workspaceService.createWorkspace(
-      data.name,
-      user.id,
-      t
-    );
+    const result = await workspaceService.createWorkspace(data.name, user.id);
+    console.log("result", result);
+    console.log("user", user);
+    console.log("data", data);
     if (!result) createError("Create error", 400);
-    await workspaceService.createMemberByAdminId(result.id, user.id, t);
-    await t.commit();
-    if (data.members.length == 0) return;
-    await data.members.map((el) =>
-      workspaceService.createMemberByUserId(el.userId, result.id)
-    );
-    res.status(200).json({ msg: "Create complete" });
+    // await workspaceService.createMemberByAdminId(result.id, user.id, t);
+    await workspaceService.createMemberByAdminId(result.id, user.id);
+
+    // await t.commit();
+    if (data.members.length > 0) {
+      await data.members.map((el) =>
+        workspaceService.createMemberByUserId(el.userId, result.id)
+      );
+    } else res.status(200).json({ msg: "Create Workspace Complete" });
+    res.status(200).json(result);
   } catch (error) {
-    await t.rollback();
+    // await t.rollback();
     next(error);
   }
 };
+
 exports.deleteWorkspaceById = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
