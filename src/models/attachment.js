@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -22,13 +21,13 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "RESTRICT",
     });
 
-    // Attachment.hasOne(models.Task, {
-    //   foreignKey: {
-    //     name: "attachmentId",
-    //     allowNull: true,
-    //   },
-    //   onDelete: "RESTRICT",
-    // });
+    Attachment.hasOne(models.Task, {
+      foreignKey: {
+        name: "attachmentId",
+        allowNull: true,
+      },
+      onDelete: "CASCADE",
+    });
   };
 
   return Attachment;

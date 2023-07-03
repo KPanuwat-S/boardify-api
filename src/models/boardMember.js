@@ -1,7 +1,6 @@
 module.exports = (sequelize, Datatypes) => {
   const BoardMember = sequelize.define("BoardMember",{}, {
     underscored: true,
-    paranoid: true,
   });
 
   BoardMember.associate = (models) => {
@@ -18,7 +17,7 @@ module.exports = (sequelize, Datatypes) => {
         name: "boardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

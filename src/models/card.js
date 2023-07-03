@@ -10,10 +10,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -23,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "boardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Card.hasMany(models.Task, {
@@ -31,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "cardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 
