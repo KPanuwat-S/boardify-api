@@ -17,15 +17,15 @@ const myProfileRoute = require("./routes/myProfileRoute");
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-app.use(
-  rateLimit({
-    windowMs: 60 * 1000 * 15,
-    max: 10000,
-    message: {
-      message: "too many request",
-    },
-  })
-);
+// app.use(
+//   rateLimit({
+//     windowMs: 60 * 1000 * 15,
+//     max: 10000,
+//     message: {
+//       message: "too many request",
+//     },
+//   })
+// );
 app.use(helmet());
 app.use(cors());
 app.use(express.json());

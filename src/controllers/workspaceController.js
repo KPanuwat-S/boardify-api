@@ -24,15 +24,11 @@ exports.getOneWorkSpace = async (req, res, next) => {
 };
 
 exports.createWorkspaceById = async (req, res, next) => {
-  const t = await sequelize.transaction();
+  // const t = await sequelize.transaction();
   try {
     const user = req.user;
     const data = req.body;
-    const result = await workspaceService.createWorkspace(
-      data.name,
-      user.id,
-      t
-    );
+    const result = await workspaceService.createWorkspace(data.name, user.id);
     console.log("result", result);
     console.log("user", user);
     console.log("data", data);
@@ -46,7 +42,7 @@ exports.createWorkspaceById = async (req, res, next) => {
         workspaceService.createMemberByUserId(el.userId, result.id)
       );
     } else res.status(200).json({ msg: "Create Workspace Complete" });
-    res.status(200).json({ msg: "Create complete" });
+    res.status(200).json(result);
   } catch (error) {
     // await t.rollback();
     next(error);
