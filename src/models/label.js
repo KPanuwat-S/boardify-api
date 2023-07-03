@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -21,9 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     Label.hasMany(models.Task, {
       foreignKey: {
         name: "labelId",
-        allowNull: false,
+        // allowNull: true,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

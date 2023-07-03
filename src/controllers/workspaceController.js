@@ -1,4 +1,3 @@
-const { sequelize } = require("../models");
 const workspaceService = require("../services/workspace-service");
 const createError = require("../utils/createError");
 
@@ -6,6 +5,7 @@ exports.getAllWorkspaces = async (req, res, next) => {
   try {
     const user = req.user;
     const workspacesData = await workspaceService.getWorkspaces(user.id);
+
     res.status(200).json(workspacesData);
   } catch (err) {
     next(err);

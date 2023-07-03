@@ -20,13 +20,11 @@ module.exports = (sequelize, DataTypes) => {
       type: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: Date.now().toString() + "cards",
         unique: true,
       },
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -36,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "boardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Card.hasMany(models.Task, {
@@ -44,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "cardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

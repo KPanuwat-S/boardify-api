@@ -25,10 +25,11 @@ exports.getCardsByBoardId = async (req, res, next) => {
                 taskType: el.type,
                 taskDescription: el.description,
                 taskPosition: el.position,
-                labelColor: el.Label.color,
-                labelDescription: el.Label.description,
-                checkListsTotal: el.ChecklistItems.length,
-                checkListsChecked: el.ChecklistItems.reduce((acc, curr) => {
+                // labelId: el.Label?.id,
+                labelColor: el.Label?.color,
+                labelDescription: el.Label?.description,
+                checkListsTotal: el.ChecklistItems?.length,
+                checkListsChecked: el.ChecklistItems?.reduce((acc, curr) => {
                   if (curr.isChecked) {
                     return (acc += 1);
                   } else if (!curr.isChecked) {
@@ -130,6 +131,7 @@ exports.updateTask = async (req, res, next) => {
     );
     res.status(200).json(cardData);
   } catch (error) {
+    await t.rollback();
     next(error);
   }
 };
