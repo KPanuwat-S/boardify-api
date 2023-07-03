@@ -6,8 +6,25 @@ exports.getWorkspaces = async (id) => {
     include: [{ model: Workspace, include: { model: Board } }],
   });
 
-  // expected {user:, workspaces:[workspace: {id}],}
-  return data;
+  const countMember = await Promise.all(data.map( async (el, idx) => {
+    const id = el.workspaceId
+    const countMember = await WorkspaceMember.count({
+      where: { workspaceId: id }
+    });
+
+    return countMember
+  })
+)
+  console.log("-------- count : ",countMember);
+
+  const newData = data.map((el, index) => ({
+    ...el.toJSON(),
+    count: countMember[index],
+  }));
+
+  console.log(newData);
+
+  return newData;
 };
 
 exports.createWorkspace = (name, userId) => Workspace.create({ userId, name });
@@ -70,3 +87,4 @@ exports.getWorkspaceById = async (workspaceId) => {
 
   return data;
 };
+
