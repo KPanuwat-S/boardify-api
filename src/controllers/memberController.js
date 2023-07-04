@@ -97,14 +97,19 @@ exports.getWorkspaceMember = async (req, res, next) => {
 exports.deleteWorkspaceMember = async (req, res, next) => {
   try {
     const id = req.query;
+    console.log("++++++++ ", id);
 
-    const [boardMemberId] = await BoardMember.findAll({
+    const members = await BoardMember.findAll({
       where: { userId: id.userId },
     });
+
+    console.log("----------",members)
+
+    // console.log({test:JSON.parse(JSON.stringify(members))})
     // console.log("--------aaa",boardMemberId);
     // console.log("--------bbb",boardMemberId.userId);
 
-    if (id.userId == boardMemberId.userId) {
+    if (JSON.parse(JSON.stringify(members)).length > 0) {
       await BoardMember.destroy({
         include: { model: Board },
         where: { userId: id.userId },
