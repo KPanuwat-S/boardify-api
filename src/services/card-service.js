@@ -50,7 +50,7 @@ exports.findCardsByBoardId = (boardId) => {
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt","id"],
+                  exclude: ["createdAt", "updatedAt", "id"],
                 },
               },
               {
@@ -228,9 +228,9 @@ exports.findLabel = (boardId) => {
   });
 };
 exports.updateCard = (data, name, position) => {
-  console.log(data,)
+  console.log(data);
   Card.update({ name, position }, { where: { id: data.id } });
-}
+};
 exports.createCard = (data) => Card.create(data);
 
 exports.updateCardName = (id, name) => Card.update({ name }, { where: { id } });
@@ -266,7 +266,7 @@ exports.updateCardDnd = (card, index, boardId) => {
     { where: { boardId, id: card.id } }
   );
 };
-exports.updateTask = (data, index, cardId) =>
+exports.updateTaskDnd = (data, index, cardId) =>
   Task.update({ position: +index + 1, cardId }, { where: { id: data.taskId } });
 //updateName
 exports.updateCardByName = (name, id) => {

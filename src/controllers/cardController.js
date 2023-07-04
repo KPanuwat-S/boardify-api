@@ -5,7 +5,6 @@ const { v4: uuidv4 } = require("uuid");
 exports.getCardsByBoardId = async (req, res, next) => {
   try {
     const board = req.params;
-    console.log(board);
     const cardData = await cardService.findCardsByBoardId(board.id);
     //fetch Data
     const fetchData = cardData.map((el) => {
@@ -54,7 +53,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
         boardId: boardIdData,
         boardName: boardNameData,
         members: membersData,
-        cards: cardsData.sort((a, b) => a.cardPosition - b.cardPosition),
+        cards: cardsData.sort((a, b) => a.position - b.position),
       });
     });
 
@@ -154,27 +153,26 @@ exports.updateNameCard = async (req, res, next) => {
     if (!checkCardById) createError("Not found", 400);
     const cardData = await cardService.updateCardByName(data.name, data.cardId);
     // if (!cardData) createError("try again", 400);
-    
+
     res.status(200).json(data);
   } catch (error) {
     next(error);
   }
 };
-exports.updateCard = async (req, res, next) => {
+exports.updateCardDnd = async (req, res, next) => {
   // require (name||type) || position , cardId
   // require source = [index,data] , destination = [index,data] , itemSource = [index,data,taskId] , itemDestination = [index,data,]
   try {
     const cards = req.body;
     const boardId = req.params;
-    console.log(boardId)
+    console.log(boardId);
     if (cards.length <= 0) createError("CardData is required", 400);
     if (!boardId) createError("params is required", 400);
     const cardData = await cards.map((card, idx) => {
       return cardService.updateCardDnd(card, idx, boardId.id);
     });
-    // const taskData = await cards.tas;
-    // res.status(200).json(cardData);
-    res.status(200).json(cardData);
+    if (!cardData) createError("fuck", 400);
+    res.status(200).json(boardId);
   } catch (error) {
     next(error);
   }
@@ -183,21 +181,14 @@ exports.updateTask = async (req, res, next) => {
   try {
     const cards = req.body;
     const boardId = req.params;
-    console.log('boardId', boardId)
+
     if (cards.length <= 0) createError("CardData is required", 400);
     if (!boardId) createError("params is required", 400);
-    // for (const data of cards) {
-    //  const  await data.task.map(async (el, index) => {
-    //     return cardService.updateTask((task, index, data.cardId));
-    //   });
-    // }
-
-
     const cardData = await Promise.all(
       cards.map(async (card, idx) => {
         await Promise.all(
           card.tasks.map(async (task, index) => {
-            await cardService.updateTask(task, index, card.cardId);
+            await cardService.updateTaskDnd(task, index, card.id);
           })
         );
 
