@@ -1,4 +1,3 @@
-const { sequelize } = require("../models");
 const workspaceService = require("../services/workspace-service");
 const createError = require("../utils/createError");
 const { WorkspaceMember } = require("../models");
@@ -9,14 +8,11 @@ exports.getAllWorkspaces = async (req, res, next) => {
     const workspacesData = await workspaceService.getWorkspaces(user.id);
     console.log("get all workspace");
 
-    
-
     res.status(200).json(workspacesData);
   } catch (err) {
     next(err);
   }
 };
-
 exports.getOneWorkSpace = async (req, res, next) => {
   try {
     const { workspaceId } = req.params;
@@ -26,7 +22,18 @@ exports.getOneWorkSpace = async (req, res, next) => {
     next(err);
   }
 };
+exports.getAllMembersInWorkspace = async (req, res, next) => {
+  try {
+    const { workspaceId } = req.params;
 
+    const members = await workspaceService.getAllMembersInWorkspace(
+      workspaceId
+    );
+    res.status(200).json({ members });
+  } catch (err) {
+    next(err);
+  }
+};
 exports.createWorkspaceById = async (req, res, next) => {
   // const t = await sequelize.transaction();
   try {
@@ -82,12 +89,12 @@ exports.updateWorkspace = async (req, res, next) => {
     const isCheck = await workspaceService.findWorkspaceById(workspace.id);
     if (!isCheck) createError("Workspace not found", 400);
     await workspaceService.updateWorkspaceById(isCheck.id, data.name);
-
     res.status(200).json({ msg: "Update complete" });
   } catch (error) {
     next(error);
   }
 };
+/// ****
 exports.addMemberWorkspaceById = async (req, res, next) => {
   try {
     res.status(200).json("hi");

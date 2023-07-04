@@ -5,7 +5,6 @@ const tokenService = require("../services/token-service");
 module.exports = async (req, res, next) => {
   try {
     const authorization = req.headers.authorization;
-    console.log(authorization);
     if (!authorization || !authorization.startsWith("Bearer"))
       createError("Unauthorized", 401);
     const token = authorization.split(" ")[1];

@@ -1,11 +1,53 @@
+const { sequelize } = require("../models");
 const cardService = require("../services/card-service");
 const createError = require("../utils/createError");
-
+const { v4: uuidv4 } = require("uuid");
 exports.getCardsByBoardId = async (req, res, next) => {
   try {
     const board = req.params;
-
+    console.log(board);
     const cardData = await cardService.findCardsByBoardId(board.id);
+    //memberTask
+    const checkCard = await cardService.findCardByBoard(board.id);
+    const newCardData = checkCard.map((el) => el.id);
+    const checkTaskData = await cardService.findTaskByCard(newCardData);
+    const newTaskData = checkTaskData.map((el) => el.id);
+    const checkTaskMember = await cardService.findTaskMemberById(newTaskData);
+    const countDataMember = checkTaskMember.reduce((acc, cur) => {
+      const idx = acc.findIndex((el) => cur.User.firstName === el.firstName);
+      if (idx !== -1) {
+        acc[idx].totalTask += 1;
+      } else {
+        const obj = {
+          firstName: cur.User.firstName,
+          totalTask: 1,
+        };
+        acc.push(obj);
+      }
+      return acc;
+    }, []);
+    // /label
+    const [labelData] = await cardService.findLabel(board.id);
+    const labelMap = {};
+    labelData.Cards.forEach((card) => {
+      card.Tasks.forEach((task) => {
+        const { labelId, Label } = task;
+        const labelName = Label.description;
+
+        if (!labelMap[labelId]) {
+          labelMap[labelId] = {
+            id: labelId,
+            labelName: labelName,
+            taskTotal: 0,
+          };
+        }
+
+        labelMap[labelId].taskTotal++;
+      });
+    });
+
+    const convertedData = Object.values(labelMap);
+    //fetch Data
     const fetchData = cardData.map((el) => {
       const [boardIdData] = el.Boards.map((el) => el.id);
       const [boardNameData] = el.Boards.map((el) => el.name);
@@ -13,16 +55,18 @@ exports.getCardsByBoardId = async (req, res, next) => {
       const [cardsData] = el.Boards.map((el) => {
         const newCardData = el.Cards.map((el) => {
           taskData = {
-            id: el.id,
-            name: el.name,
-            position: el.position,
+            cardId: el.id,
+            cardName: el.name,
+            cardType: el.type,
+            cardPosition: el.position,
             tasks: el.Tasks.map((el) => {
               return (taskDetailData = {
                 taskId: el.id,
                 taskName: el.name,
-                taskDescription: el?.description,
+                taskType: el.type,
+                taskDescription: el.description,
                 taskPosition: el.position,
-                // labelId: el.Label?.id,
+                labelId: el.Label?.id,
                 labelColor: el.Label?.color,
                 labelDescription: el.Label?.description,
                 checkListsTotal: el.ChecklistItems?.length,
@@ -35,9 +79,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
                   return acc;
                 }, 0),
                 dueDate: el.dueDate,
-                commentsNumber: el.Comment,
                 members: el.TaskMembers,
-                numberOfFilesAttached: el.Attachment,
               });
             }),
           };
@@ -52,105 +94,117 @@ exports.getCardsByBoardId = async (req, res, next) => {
         boardName: boardNameData,
         members: membersData,
         cards: cardsData.sort((a, b) => a.cardPosition - b.cardPosition),
+        taskLabel: convertedData,
+        taskMembersData: countDataMember,
       });
     });
 
-    const [data] = fetchData;
-    console.log("data", data);
-    res.status(200).json(data);
+    res.status(200).json(fetchData);
   } catch (error) {
     next(error);
   }
 };
-
 exports.addCard = async (req, res, next) => {
   try {
     //require board_id name position
     const data = req.body;
-
-    if (!data.name || data.position === undefined)
-      createError("Is require", 400);
-    console.log("req params", req.params);
-    const { id } = req.params;
-    console.log("id", id);
-    const checkBoardById = await cardService.findBoardById(id);
-    console.log("checkboard", checkBoardById);
+    const boardId = req.params;
+    const uuid = uuidv4();
+    const newId = uuid + "card";
+    console.log(newId);
+    if (!data.name) createError("Is require", 400);
+    const checkBoardById = await cardService.findBoardById(boardId.id);
     if (!checkBoardById) createError("Not Found", 400);
-    const newData = { ...data, boardId: id };
+    const [checkPosition] = await cardService.findCardMaxPosition(boardId.id);
+    if (!checkPosition) createError("Not Found", 400);
+    const newData = {
+      ...data,
+      boardId: boardId.id,
+      position: +checkPosition.position + 1,
+      type: newId,
+    };
+    console.log(newData);
     const cardData = await cardService.createCard(newData);
     res.status(200).json(cardData);
   } catch (error) {
     next(error);
   }
 };
-
 exports.updateNameCard = async (req, res, next) => {
-  // require (name||type) || position , cardId
-  // require source = [index,data] , destination = [index,data] , itemSource = [index,data,taskId] , itemDestination = [index,data,]
   try {
+    const boardId = req.params;
     const data = req.body;
-    console.log(data);
     const checkCardById = await cardService.findCardById(
-      data.boardId,
+      boardId.id,
       data.cardId
     );
     if (!checkCardById) createError("Not found", 400);
-    const cardData = await cardService.updateCard(
-      checkCardById.Cards[0],
-      data.name,
-      data.position
-    );
-    if (!cardData) createError("try again", 400);
-    res.json(cardData);
+    const cardData = await cardService.updateCardByName(data.name, data.cardId);
+    // if (!cardData) createError("try again", 400);
+    res.json(data);
   } catch (error) {
     next(error);
   }
 };
+exports.updateCard = async (req, res, next) => {
+  // require (name||type) || position , cardId
+  // require source = [index,data] , destination = [index,data] , itemSource = [index,data,taskId] , itemDestination = [index,data,]
+  try {
+    const cards = req.body;
+    const boardId = req.params;
+    if (cards.length <= 0) createError("CardData is required", 400);
+    if (!boardId) createError("params is required", 400);
+    const cardData = await cards.map((card, idx) => {
+      return cardService.updateCard(card, idx, boardId.id);
+    });
+    const taskData = await cards.tas;
+    res.status(200).json(cardData);
+  } catch (error) {
+    next(error);
+  }
+};
+exports.updateTask = async (req, res, next) => {
+  try {
+    const cards = req.body;
+    const boardId = req.params;
+    if (cards.length <= 0) createError("CardData is required", 400);
+    if (!boardId) createError("params is required", 400);
+    // for (const data of cards) {
+    //  const  await data.task.map(async (el, index) => {
+    //     return cardService.updateTask((task, index, data.cardId));
+    //   });
+    // }
+    const cardData = await Promise.all(
+      cards.map(async (card, idx) => {
+        await Promise.all(
+          card.tasks.map(async (task, index) => {
+            await cardService.updateTask(task, index, card.cardId);
+          })
+        );
 
+        return card;
+      })
+    );
+    res.status(200).json(cardData);
+  } catch (error) {
+    await t.rollback();
+    next(error);
+  }
+};
 exports.deleteCard = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
     const cardId = req.params;
     if (!cardId) createError("CardId is require");
     const [allData] = await cardService.findTaskByCardId(cardId.id);
-    if (!allData) createError("Not found", 400);
-    // if (allData.Comments.length > 0) {
-    //   for (const data of allData.Comments) {
-    //     const resComments = await cardService.deleteComments(data.id, t));
-    //   }
-    //   if (!resComments) createError("TasksMember delete fail", 400);
-    // }
-    if (allData.Attachment) {
-      const resAttachment = await cardService.deleteAttachment(
-        allData.Attachment.id,
-        t
-      );
-      if (!resAttachment) createError("Attachment delete fail", 400);
-    }
-    if (allData.TaskMembers.length > 0) {
-      for (const data of allData.TaskMembers) {
-        const resTasksMember = await cardService.deleteTaskMembers(data.id, t);
-        if (!resTasksMember) createError("TasksMember delete fail", 400);
-      }
-    }
-    if (allData.id) {
-      const taskData = await cardService.deleteTaskById(allData.id, t);
-      if (!taskData) createError("Task delete fail", 400);
-    }
-    const resCard = await cardService.deleteCardById(cardId.id, t);
-    if (!resCard) createError("Card delete fail", 400);
-    await t.commit();
-    res.status(200).json({ msg: "Delete Complete" });
+
+    // const resCard = await cardService.deleteCardById(cardId.id, t);
+    // if (!resCard) createError("Card delete fail", 400);
+    // await t.commit();
+    // res.status(200).json({ msg: "Delete complete" });
+    res.status(200).json(allData);
   } catch (error) {
     await t.rollback();
-    next(error);
-  }
-};
-
-exports.test = async (req, res, next) => {
-  try {
-    res.json(req.body);
-  } catch (error) {
     next(error);
   }
 };

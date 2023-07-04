@@ -13,7 +13,7 @@ const {
   sequelize,
 } = require("../models");
 const { Op } = require("sequelize");
-
+/////get
 exports.findCardsByBoardId = (boardId) => {
   return Workspace.findAll({
     attributes: { exclude: ["createdAt", "updatedAt"] },
@@ -27,14 +27,12 @@ exports.findCardsByBoardId = (boardId) => {
           model: BoardMember,
           attributes: { exclude: ["createdAt", "updatedAt"] },
         },
-
         {
           model: Card,
           where: { boardId: boardId },
           attributes: {
             exclude: ["createdAt", "updatedAt", , "boardId"],
           },
-
           include: {
             model: Task,
             attributes: {
@@ -67,6 +65,7 @@ exports.findCardsByBoardId = (boardId) => {
               },
               {
                 model: TaskMember,
+
                 attributes: {
                   exclude: ["createdAt", "updatedAt"],
                 },
@@ -84,26 +83,166 @@ exports.findCardsByBoardId = (boardId) => {
     },
   });
 };
+exports.findCardByBoard = (boardId) => {
+  return Card.findAll({
+    where: { boardId },
+    attributes: {
+      exclude: [
+        "createdAt",
+        "updatedAt",
+        "type",
+        "name",
+        "position",
+        "boardId",
+      ],
+    },
+  });
+};
+exports.findTaskByCard = (newData) => {
+  return Task.findAll({
+    where: {
+      cardId: { [Op.in]: newData },
+    },
+    attributes: {
+      exclude: [
+        "createdAt",
+        "updatedAt",
+        "type",
+        "name",
+        "position",
+        "description",
+        "attachmentId",
+        "cardId",
+        "labelId",
+      ],
+    },
+  });
+};
+exports.findTaskMemberById = (taskId) => {
+  return TaskMember.findAll({
+    where: {
+      taskId: { [Op.in]: taskId },
+    },
+    attributes: {
+      exclude: ["createdAt", "updatedAt"],
+    },
+    include: [
+      {
+        model: Task,
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "name",
+            "description",
+            "position",
+            "dueDate",
+            "type",
+            "attachmentId",
+            "cardId",
+            "labelId",
+            "userId",
+          ],
+        },
+      },
+      {
+        model: User,
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "lastName",
+            "password",
+            "email",
+            "isVerify",
+            "googleId",
+          ],
+        },
+      },
+    ],
+  });
+};
+exports.findUserById = (data) => {
+  return User.findAll({
+    where: {
+      id: { [Op.in]: data },
+    },
+    attributes: {
+      exclude: ["createdAt", "updatedAt"],
+    },
+  });
+};
+exports.findLabel = (boardId) => {
+  return Board.findAll({
+    where: { id: boardId },
+    attributes: {
+      exclude: [
+        "createdAt",
+        "updatedAt",
+        "name",
+        "userId",
+        "workspaceId",
+        "id",
+      ],
+    },
+    include: {
+      model: Card,
+      attributes: {
+        exclude: [
+          "createdAt",
+          "updatedAt",
+          "name",
+          "userId",
+          "workspaceId",
+          "boardId",
+          "position",
+          "type",
+        ],
+      },
+      where: { boardId },
+      include: {
+        model: Task,
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "name",
+            "userId",
+            "boardId",
+            "position",
+            "type",
+            "description",
+            "attachmentId",
+            "cardId",
+          ],
+        },
+        include: [
+          {
+            model: Label,
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "color", "id"],
+            },
+          },
+        ],
+      },
+    },
+  });
+};
+
+////add
 exports.findBoardById = (boardId) =>
   Board.findOne({
     where: { id: boardId },
   });
-exports.findCardById = (boardId, cardId) => {
-  return Board.findOne({
-    where: { id: boardId },
-    include: {
-      model: Card,
-      where: { [Op.and]: [{ id: cardId }, { boardId }] },
-    },
+exports.findCardMaxPosition = (boardId) => {
+  return Card.findAll({
+    where: { boardId },
+    order: [[sequelize.literal("position"), "DESC"]],
+    limit: 1,
   });
 };
-exports.updateCard = (data, name, position) =>
-  Card.update({ name, position }, { where: { id: data.id } });
 exports.createCard = (data) => Card.create(data);
-
-exports.deleteCardById = (cardId) => Card.destroy({ where: { id: cardId.id } });
-
-exports.createCard = (data) => Card.create(data);
+//updateName
 ////update
 exports.findCardById = (boardId, id) => {
   return Board.findOne({
@@ -114,28 +253,26 @@ exports.findCardById = (boardId, id) => {
     },
   });
 };
-exports.updateCard = (data, name, position) =>
-  Card.update({ name, position }, { where: { id: data.id } });
-
-exports.createCard = (data) => Card.create(data); ///delete
-
+//update Dnd
+exports.updateCard = (card, index, boardId) => {
+  console.log(card, index, boardId);
+  Card.update(
+    { position: +index + 1 },
+    { where: { boardId, id: card.cardId } }
+  );
+};
+exports.updateTask = (data, index, cardId) =>
+  Task.update({ position: +index + 1, cardId }, { where: { id: data.taskId } });
+//updateName
+exports.updateCardByName = (name, id) => {
+  return Card.update({ name }, { where: { id } });
+};
+///delete
 exports.findTaskByCardId = (cardId) => {
-  exports.deleteCardById = (cardId) =>
-    Card.destroy({ where: { id: cardId.id } });
-  return Task.findAll({
-    where: { cardId },
+  return Card.findAll({
+    where: { id: cardId },
     attributes: {
-      exclude: [
-        "createdAt",
-        "updatedAt",
-        ,
-        "name",
-        "description",
-        "position",
-        "dueDate",
-        "labelId",
-        "userId",
-      ],
+      exclude: ["createdAt", "updatedAt", , "name", "description", "userId"],
     },
     include: [
       {
@@ -154,9 +291,16 @@ exports.findTaskByCardId = (cardId) => {
           exclude: ["createdAt", "updatedAt", , "comment", "userId"],
         },
       },
+      {
+        model: Comment,
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "deletedAt", "comment", "userId"],
+        },
+      },
     ],
   });
 };
+
 exports.deleteCardById = (id, t) => {
   return Card.destroy({ where: { id }, transaction: t });
 };
