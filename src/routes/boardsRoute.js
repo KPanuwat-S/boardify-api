@@ -15,13 +15,12 @@ router.patch("/board/:id", boardsController.editBoardName);
 router.get("/cards/:id", cardsController.getCardsByBoardId);
 router.get("/dashBoard/:id", cardsController.getDashBoard);
 router.post("/cards/:id", cardsController.addCard);
-router.patch("/cardsDnd/:id", cardsController.updateCard);
+router.patch("/cardsDnd/:id", cardsController.updateCardDnd);
 router.patch("/cardsName/:id", cardsController.updateNameCard);
 router.patch("/tasksDnd/:id", cardsController.updateTask);
 router.delete("/cards/:id", cardsController.deleteCard);
 router.patch("/cards/card/:id", cardsController.updateCardName);
-// router.patch("/test", cardsController.test);
-router.patch("/updateCard/:id", cardsController.updateNameCard);
+// router.patch("/updateCard/:id", cardsController.updateNameCard);
 
 // router.post("/tasks/member", taskController.addMeToTask);
 
