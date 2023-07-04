@@ -16,23 +16,23 @@ const { Op } = require("sequelize");
 
 exports.findCardsByBoardId = (boardId) => {
   return Workspace.findAll({
-    attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+    attributes: { exclude: ["createdAt", "updatedAt"] },
     include: {
       model: Board,
       where: { id: boardId },
-      attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
 
       include: [
         {
           model: BoardMember,
-          attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+          attributes: { exclude: ["createdAt", "updatedAt"] },
         },
 
         {
           model: Card,
           where: { boardId: boardId },
           attributes: {
-            exclude: ["createdAt", "updatedAt", "deletedAt", "boardId"],
+            exclude: ["createdAt", "updatedAt", "boardId"],
           },
 
           include: {
@@ -41,7 +41,6 @@ exports.findCardsByBoardId = (boardId) => {
               exclude: [
                 "createdAt",
                 "updatedAt",
-                "deletedAt",
                 "attachmentId",
                 "cardId",
                 "commentId",
@@ -53,7 +52,7 @@ exports.findCardsByBoardId = (boardId) => {
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt", "id"],
+                  exclude: ["createdAt", "updatedAt", , "id"],
                 },
               },
               {
@@ -62,19 +61,19 @@ exports.findCardsByBoardId = (boardId) => {
               {
                 model: Comment,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
               {
                 model: TaskMember,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
               {
                 model: Attachment,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
             ],
@@ -100,6 +99,8 @@ exports.findCardById = (boardId, cardId) => {
 exports.updateCard = (data, name, position) =>
   Card.update({ name, position }, { where: { id: data.id } });
 exports.createCard = (data) => Card.create(data);
+
+exports.updateCardName = (id, name) => Card.update({ name }, { where: { id } });
 
 exports.deleteCardById = (cardId) => Card.destroy({ where: { id: cardId.id } });
 
@@ -128,7 +129,6 @@ exports.findTaskByCardId = (cardId) => {
       exclude: [
         "createdAt",
         "updatedAt",
-        "deletedAt",
         "name",
         "description",
         "position",
@@ -140,18 +140,18 @@ exports.findTaskByCardId = (cardId) => {
     include: [
       {
         model: TaskMember,
-        attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
       },
       {
         model: Attachment,
         attributes: {
-          exclude: ["createdAt", "updatedAt", "deletedAt", "file", "userId"],
+          exclude: ["createdAt", "updatedAt", "file", "userId"],
         },
       },
       {
         model: Comment,
         attributes: {
-          exclude: ["createdAt", "updatedAt", "deletedAt", "comment", "userId"],
+          exclude: ["createdAt", "updatedAt", "comment", "userId"],
         },
       },
     ],

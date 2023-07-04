@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -27,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "boardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Board.hasMany(models.BoardMember, {
@@ -35,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "boardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Board.belongsTo(models.Workspace, {
@@ -43,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "workspaceId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

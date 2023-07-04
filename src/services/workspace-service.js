@@ -67,6 +67,5 @@ exports.getWorkspaceById = async (workspaceId) => {
   const data = await Workspace.findOne({
     where: { id: workspaceId },
   });
-
   return data;
 };

@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "workspaceId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

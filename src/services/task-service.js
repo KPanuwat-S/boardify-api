@@ -11,35 +11,36 @@ const {
   Comment,
   Attachment,
   sequelize,
+  User,
 } = require("../models");
 
 exports.findTaskById = (id) => {
   return Workspace.findOne({
-    attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+    attributes: { exclude: ["createdAt", "updatedAt"] },
     include: {
       model: Board,
 
-      attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
 
       include: [
         {
           model: Card,
 
           attributes: {
-            exclude: ["createdAt", "updatedAt", "deletedAt", "boardId"],
+            exclude: ["createdAt", "updatedAt","boardId"],
           },
 
           include: {
             model: Task,
             where: { id },
             attributes: {
-              exclude: ["createdAt", "updatedAt", "deletedAt", "cardId"],
+              exclude: ["createdAt", "updatedAt","cardId"],
             },
             include: [
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt", "id"],
+                  exclude: ["createdAt", "updatedAt","id"],
                 },
               },
               {
@@ -48,19 +49,20 @@ exports.findTaskById = (id) => {
               {
                 model: Comment,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
               {
                 model: TaskMember,
+                include: User,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
               {
                 model: Attachment,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "deletedAt"],
+                  exclude: ["createdAt", "updatedAt"],
                 },
               },
             ],
@@ -133,7 +135,16 @@ exports.updateChecklistItems = (checklistObject) =>
     { where: { id: checklistObject.id } }
   );
 
-exports.deleteChecklist = (checklistId) => {
+exports.deleteChecklist = (checklistId) =>
   ChecklistItem.destroy({ where: { id: checklistId } });
-};
+
 // exports.findTask = (id) => Task.id
+
+exports.addMemberToTask = (taskId, userId) =>
+  TaskMember.create({ taskId: taskId, userId: userId });
+
+exports.removeMemberFromTask = (taskId, userId) =>
+  TaskMember.destroy({ where: { taskId: taskId, userId: userId } });
+
+exports.getMemberInTask = (taskId) =>
+  TaskMember.findAll({ where: { taskId: taskId } });

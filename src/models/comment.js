@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -19,15 +18,16 @@ module.exports = (sequelize, DataTypes) => {
         name: "userId",
         allowNull: false,
       },
+
       onDelete: "RESTRICT",
     });
-    
+
     Comment.belongsTo(models.Task, {
       foreignKey: {
         name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 
