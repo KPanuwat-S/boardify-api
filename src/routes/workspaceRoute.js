@@ -1,18 +1,18 @@
 const express = require("express");
 
-const workspaceController = require("../controllers/workspaceController");
-
 const workSpaceController = require("../controllers/workspaceController");
 const router = express.Router();
 
 router.get("/", workSpaceController.getAllWorkspaces);
-router.get("/workspace/:workspaceId", workspaceController.getOneWorkSpace);
+router.get("/workspace/:workspaceId", workSpaceController.getOneWorkSpace);
 router.get(
   "/members/:workspaceId",
   workSpaceController.getAllMembersInWorkspace
 );
-router.post("/", workspaceController.createWorkspaceById);
-router.delete("/:id", workspaceController.deleteWorkspaceById);
-router.patch("/:id", workspaceController.updateWorkspace);
-router.post("/", workspaceController.addMemberWorkspaceById);
+router.post("/", workSpaceController.createWorkspaceById);
+router.post("/", workSpaceController.addMemberWorkspaceById);
+router.get("/countMemberWorkspace/:id", workSpaceController.countMemberWorkspace)
+router.delete("/:id", workSpaceController.deleteWorkspaceById);
+router.patch("/:id", workSpaceController.updateWorkspace);
+
 module.exports = router;

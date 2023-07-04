@@ -14,7 +14,6 @@ exports.register = async (req, res, next) => {
     const value = validateRegister(req.body);
 
     const checkEmail = await authService.findByEmail(value.email);
-    console.log(checkEmail);
 
     if (checkEmail.length > 0) createError("Email is duplicate", 400);
 
@@ -26,7 +25,6 @@ exports.register = async (req, res, next) => {
     const url = `http://localhost:${process.env.PORT}/auth/emailconfirmation/${accessToken}`;
 
     const verifyEmail = await emailVerifyService.verify(value, url);
-    // console.log(verifyEmail);
 
     res.status(200).json("Success");
   } catch (err) {
@@ -36,18 +34,16 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
+    console.log("hi");
     const value = validateLogin(req.body);
-    console.log(req.body);
-    console.log("login in api ");
+
     const userBeforeEmailVerify = await User.findOne({
       where: { email: value.email },
     });
-    console.log(userBeforeEmailVerify);
 
     if (userBeforeEmailVerify && !userBeforeEmailVerify.isVerify) {
       createError("Please confirm your email to login.");
     }
-
     const user = await authService.checkUserByEmailAndVerify(value.email);
     if (!user) createError("User not Verify", 400);
     const isCorrect = await bcryptService.compare(
@@ -66,14 +62,12 @@ exports.login = async (req, res, next) => {
 };
 
 exports.verify = async (req, res, next) => {
-  // console.log("sfdsdsdf");
   const tokenEmail = req.params.token;
   try {
     const payload = tokenService.verifyEmail(tokenEmail);
-    console.log(payload);
 
     const user = await authService.getUserById(payload.id);
-    console.log(user);
+
     if (!user) {
       createError("Email not register", 401);
     }
@@ -108,7 +102,7 @@ exports.googleLogin = async (req, res, next) => {
       await authService.createUser(user);
     }
     const accessToken = tokenService.sign({ id: user.id });
-    // console.log("accesstoken form gglogin fn", accessToken);
+    console.log("accesstoken form gglogin fn", accessToken);
     res.status(200).json({ accessToken });
   } catch (err) {
     next(err);

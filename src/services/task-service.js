@@ -13,7 +13,6 @@ const {
   sequelize,
   User,
 } = require("../models");
-
 exports.findTaskById = (id) => {
   return Workspace.findOne({
     attributes: { exclude: ["createdAt", "updatedAt"] },
@@ -72,56 +71,19 @@ exports.findTaskById = (id) => {
     },
   });
 };
-
-exports.addTask = (input) => Task.create(input);
-
 exports.deleteTaskById = (id) => Task.destroy({ where: { id } });
-
-exports.updateTaskById = (
-  name,
-  description,
-  position,
-  cardId,
-  labelId,
-  attachmentId,
-  userId,
-  dueDate,
-  id
-) =>
+exports.updateTaskById = ({ name, description, cardId, labelId, userId, id }) =>
   Task.update(
-    {
-      name,
-      dueDate,
-      description,
-      position,
-      cardId,
-      labelId,
-      userId,
-      attachmentId,
-    },
+    { name, description, cardId, labelId, userId },
     { where: { id } }
   );
-
-//attachment
-exports.createAttachment = (file, userId, t) =>
-  Attachment.create({ file, userId }, { transaction: t });
-exports.addAttachmentIdInTask = (id, attachmentId, t) =>
-  Task.update({ attachmentId }, { where: { id }, transaction: t });
-exports.deleteAttachment = (id, t) =>
-  Attachment.destroy({ where: { id }, transaction: t });
-exports.updateAttachmentIdInTask = (attachmentId, t) =>
-  Task.update(
-    { attachmentId: null },
-    { where: { attachmentId }, transaction: t }
-  );
-
-// Checklist
-exports.addChecklist = (checklistObject) => {
-  console.log("addchecklist");
-  ChecklistItem.create({
-    description: checklistObject.description,
-    // isChecked: checklistObject.isChecked,
-    taskId: checklistObject.taskId,
+//addtask
+exports.findCardById = (id) => Card.findAll({ where: { id } });
+exports.findTaskByCardIdMax = (cardId) =>{
+  Task.findAll({
+    where: { cardId },
+    order: [[sequelize.literal("position"), "DESC"]],
+    limit: 1,
   });
   console.log("checklistObject", checklistObject);
 };

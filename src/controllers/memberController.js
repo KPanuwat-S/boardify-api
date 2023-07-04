@@ -15,7 +15,7 @@ exports.searchUser = async (req, res, next) => {
 
     const email = await memberService.filterAllUser(value);
 
-    console.log(email);
+    // console.log(email);
     res.status(200).json(email);
   } catch (error) {
     next(error);
@@ -25,7 +25,7 @@ exports.searchUser = async (req, res, next) => {
 exports.searchAddMember = async (req, res, next) => {
   try {
     const { value } = req.query;
-    console.log(value);
+    // console.log(value);
 
     const member = await memberService.filterMember(value);
 
@@ -43,17 +43,21 @@ exports.addMember = async (req, res, next) => {
 
     for (const data of memberAll) {
       if (await WorkspaceMember.findOne({ where: { userId: data.id } })) {
-        // console.log("ssss", data);
-        console.log("It's already have member.");
-        return;
+        if (await WorkspaceMember.findOne({ where: { userId: data.id } })) {
+          // console.log("ssss", data);
+          // console.log(data.id);
+          console.log("It's already have member.");
+          return;
+        }
+        await WorkspaceMember.create({
+          workspaceId,
+          isAdmin: 0,
+          userId: data.id,
+        });
       }
-      await WorkspaceMember.create({
-        workspaceId,
-        isAdmin: 0,
-        userId: data.id,
-      });
     }
 
+    console.log("Success");
     res.status(200).json("Success");
   } catch (error) {
     next(error);
@@ -95,14 +99,19 @@ exports.getWorkspaceMember = async (req, res, next) => {
 exports.deleteWorkspaceMember = async (req, res, next) => {
   try {
     const id = req.query;
+    console.log("++++++++ ", id);
 
-    const [boardMemberId] = await BoardMember.findAll({
+    const members = await BoardMember.findAll({
       where: { userId: id.userId },
     });
+
+    console.log("----------", members);
+
+    // console.log({test:JSON.parse(JSON.stringify(members))})
     // console.log("--------aaa",boardMemberId);
     // console.log("--------bbb",boardMemberId.userId);
 
-    if (id.userId == boardMemberId.userId) {
+    if (JSON.parse(JSON.stringify(members)).length > 0) {
       await BoardMember.destroy({
         include: { model: Board },
         where: { userId: id.userId },

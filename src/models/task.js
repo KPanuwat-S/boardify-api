@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
       },
       position: {
         type: DataTypes.INTEGER,
@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
+      isDone: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      }
     },
     {
       underscored: true,

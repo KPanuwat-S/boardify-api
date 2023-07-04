@@ -1,30 +1,43 @@
 const { WorkspaceMember, Board, Workspace, User } = require("../models");
 const { Op } = require("sequelize");
 exports.getWorkspaces = async (id) => {
-  const data = await WorkspaceMember.findAll({
+  return await WorkspaceMember.findAll({
     where: { userId: id },
     include: [{ model: Workspace, include: { model: Board } }],
   });
 
-  // expected {user:, workspaces:[workspace: {id}],}
-  return data;
-};
+  const countMember = await Promise.all(data.map( async (el, idx) => {
+    const id = el.workspaceId
+    const countMember = await WorkspaceMember.count({
+      where: { workspaceId: id }
+    });
 
-exports.createWorkspace = (name, userId) => Workspace.create({ userId, name });
-exports.createMemberByAdminId = (workspaceId, userId) =>
-  WorkspaceMember.create({ userId, workspaceId, isAdmin: 1 });
+    return countMember
+  })
+)
+  console.log("-------- count : ",countMember);
+
+  const newData = data.map((el, index) => ({
+    ...el.toJSON(),
+    count: countMember[index],
+  }));
+
+  console.log(newData);
+
+  return newData;
+};
+/////////create
+exports.createWorkspace = (name, userId, t) =>
+  Workspace.create({ userId, name }, { transaction: t });
+exports.createMemberByAdminId = (workspaceId, userId, t) =>
+  WorkspaceMember.create(
+    { userId, workspaceId, isAdmin: 1 },
+    { transaction: t }
+  );
 exports.createMemberByUserId = (userId, workspaceId) =>
   WorkspaceMember.create({ userId, workspaceId, isAdmin: 0 });
 
-exports.findMemberById = (workspaceId, userId) =>
-  WorkspaceMember.findAll({
-    where: { [Op.and]: [{ workspaceId }, { userId }] },
-    include: {
-      model: Workspace,
-      where: { [Op.and]: [{ id: workspaceId }, { userId }] },
-    },
-  });
-
+////////////delete
 exports.findAdminById = (workspaceId, userId) =>
   Workspace.findOne({
     where: { [Op.and]: [{ id: workspaceId }, { userId }] },
@@ -35,12 +48,6 @@ exports.deleteMemberWorkspaceById = (workspaceId, t) =>
 exports.deleteWorkspaceById = (id, t) =>
   Workspace.destroy({ where: { id }, transaction: t });
 /////////update
-
-exports.createMemberByAdminId = (workspaceId, userId) =>
-  WorkspaceMember.create({ userId, workspaceId, isAdmin: 1 });
-exports.createMemberByUserId = (userId, workspaceId) =>
-  WorkspaceMember.create({ userId, workspaceId, isAdmin: 0 });
-exports.deleteWorkspaceById = (id) => Workspace.destroy({ where: { id } });
 exports.findWorkspaceById = (id) => Workspace.findOne({ where: { id } });
 exports.updateWorkspaceById = (id, name) =>
   Workspace.update({ name }, { where: { id } });
@@ -69,3 +76,4 @@ exports.getWorkspaceById = async (workspaceId) => {
   });
   return data;
 };
+
