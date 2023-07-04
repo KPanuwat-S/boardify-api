@@ -79,14 +79,12 @@ exports.updateTaskById = ({ name, description, cardId, labelId, userId, id }) =>
   );
 //addtask
 exports.findCardById = (id) => Card.findAll({ where: { id } });
-exports.findTaskByCardIdMax = (cardId) =>
+exports.findTaskByCardIdMax = (cardId) =>{
   Task.findAll({
     where: { cardId },
     order: [[sequelize.literal("position"), "DESC"]],
     limit: 1,
   });
-<<<<<<< HEAD
-=======
   console.log("checklistObject", checklistObject);
 };
 exports.updateChecklistItems = (checklistObject) =>
@@ -112,4 +110,3 @@ exports.removeMemberFromTask = (taskId, userId) =>
 
 exports.getMemberInTask = (taskId) =>
   TaskMember.findAll({ where: { taskId: taskId } });
->>>>>>> develop
