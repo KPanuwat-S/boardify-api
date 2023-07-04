@@ -16,6 +16,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
             id: el.id,
             name: el.name,
             position: el.position,
+            cardType: el.type,
             tasks: el.Tasks.map((el) => {
               return (taskDetailData = {
                 taskId: el.id,
@@ -25,6 +26,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
                 // labelId: el.Label?.id,
                 labelColor: el.Label?.color,
                 labelDescription: el.Label?.description,
+                taskType: el.type,
                 checkListsTotal: el.ChecklistItems?.length,
                 checkListsChecked: el.ChecklistItems?.reduce((acc, curr) => {
                   if (curr.isChecked) {
@@ -102,8 +104,19 @@ exports.updateNameCard = async (req, res, next) => {
     );
     if (!cardData) createError("try again", 400);
     res.json(cardData);
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateCardName = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const editCardName = await cardService.updateCardName(id, name);
+    res.status(200).json(editCardName);
+  } catch (err) {
+    next(err);
   }
 };
 

@@ -32,7 +32,7 @@ exports.findCardsByBoardId = (boardId) => {
           model: Card,
           where: { boardId: boardId },
           attributes: {
-            exclude: ["createdAt", "updatedAt", , "boardId"],
+            exclude: ["createdAt", "updatedAt", "boardId"],
           },
 
           include: {
@@ -41,7 +41,6 @@ exports.findCardsByBoardId = (boardId) => {
               exclude: [
                 "createdAt",
                 "updatedAt",
-                ,
                 "attachmentId",
                 "cardId",
                 "commentId",
@@ -53,7 +52,7 @@ exports.findCardsByBoardId = (boardId) => {
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", , "id"],
+                  exclude: ["createdAt", "updatedAt","id"],
                 },
               },
               {
@@ -101,6 +100,8 @@ exports.updateCard = (data, name, position) =>
   Card.update({ name, position }, { where: { id: data.id } });
 exports.createCard = (data) => Card.create(data);
 
+exports.updateCardName = (id, name) => Card.update({ name }, { where: { id } });
+
 exports.deleteCardById = (cardId) => Card.destroy({ where: { id: cardId.id } });
 
 exports.createCard = (data) => Card.create(data);
@@ -128,7 +129,6 @@ exports.findTaskByCardId = (cardId) => {
       exclude: [
         "createdAt",
         "updatedAt",
-        ,
         "name",
         "description",
         "position",
@@ -145,13 +145,13 @@ exports.findTaskByCardId = (cardId) => {
       {
         model: Attachment,
         attributes: {
-          exclude: ["createdAt", "updatedAt", , "file", "userId"],
+          exclude: ["createdAt", "updatedAt", "file", "userId"],
         },
       },
       {
         model: Comment,
         attributes: {
-          exclude: ["createdAt", "updatedAt", , "comment", "userId"],
+          exclude: ["createdAt", "updatedAt", "comment", "userId"],
         },
       },
     ],
