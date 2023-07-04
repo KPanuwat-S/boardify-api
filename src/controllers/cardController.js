@@ -15,10 +15,10 @@ exports.getCardsByBoardId = async (req, res, next) => {
       const [cardsData] = el.Boards.map((el) => {
         const newCardData = el.Cards.map((el) => {
           taskData = {
-            cardId: el.id,
-            cardName: el.name,
+            id: el.id,
+            name: el.name,
+            position: el.position,
             cardType: el.type,
-            cardPosition: el.position,
             tasks: el.Tasks.map((el) => {
               return (taskDetailData = {
                 taskId: el.id,
@@ -29,6 +29,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
                 labelId: el.Label?.id,
                 labelColor: el.Label?.color,
                 labelDescription: el.Label?.description,
+                taskType: el.type,
                 checkListsTotal: el.ChecklistItems?.length,
                 checkListsChecked: el.ChecklistItems?.reduce((acc, curr) => {
                   if (curr.isChecked) {
@@ -197,10 +198,21 @@ exports.updateTask = async (req, res, next) => {
         return card;
       })
     );
-    res.status(200).json(cardData);
-  } catch (error) {
-    await t.rollback();
-    next(error);
+    if (!cardData) createError("try again", 400);
+    res.json(cardData);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateCardName = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const editCardName = await cardService.updateCardName(id, name);
+    res.status(200).json(editCardName);
+  } catch (err) {
+    next(err);
   }
 };
 exports.deleteCard = async (req, res, next) => {

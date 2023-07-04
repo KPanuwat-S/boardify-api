@@ -190,3 +190,42 @@ exports.deleteAttachment = async (req, res, next) => {
 //     next(error);
 //   }
 // };
+
+exports.addMeToTask = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const { taskId } = req.body;
+    console.log("data", taskId);
+    const data = await taskService.addMemberToTask(taskId, user.id);
+    res.status(200).json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.removeMeFromTask = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const { id } = req.params;
+    console.log("taskId in remove me from task", id);
+    await taskService.removeMemberFromTask(id, user.id);
+    res.status(204).json({ message: "Delete Complete" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.addMemberToTask = async (req, res, next) => {};
+
+exports.getMembersInTask = async (req, res, next) => {
+  try {
+    // const { taskId } = req.body;
+    const { id } = req.params;
+    // console.log("taskIdin", taskId);
+    const members = await taskService.getMemberInTask(id);
+    console.log("member", members);
+    res.status(200).json(members);
+  } catch (err) {
+    next(err);
+  }
+};

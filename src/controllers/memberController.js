@@ -43,16 +43,18 @@ exports.addMember = async (req, res, next) => {
 
     for (const data of memberAll) {
       if (await WorkspaceMember.findOne({ where: { userId: data.id } })) {
-        // console.log("ssss", data);
-        // console.log(data.id);
-        console.log("It's already have member.");
-        return;
+        if (await WorkspaceMember.findOne({ where: { userId: data.id } })) {
+          // console.log("ssss", data);
+          // console.log(data.id);
+          console.log("It's already have member.");
+          return;
+        }
+        await WorkspaceMember.create({
+          workspaceId,
+          isAdmin: 0,
+          userId: data.id,
+        });
       }
-      await WorkspaceMember.create({
-        workspaceId,
-        isAdmin: 0,
-        userId: data.id,
-      });
     }
 
     console.log("Success");
@@ -103,7 +105,7 @@ exports.deleteWorkspaceMember = async (req, res, next) => {
       where: { userId: id.userId },
     });
 
-    console.log("----------",members)
+    console.log("----------", members);
 
     // console.log({test:JSON.parse(JSON.stringify(members))})
     // console.log("--------aaa",boardMemberId);
@@ -139,7 +141,7 @@ exports.getMemberRole = async (req, res, next) => {
 
     if (id.authUserId == workspace.id && workspace.isAdmin == true) {
       return res.status(200).json(workspace.isAdmin);
-    } 
+    }
 
     // console.log("roleMember--------- :", id);
     res.status(200).json(workspace);

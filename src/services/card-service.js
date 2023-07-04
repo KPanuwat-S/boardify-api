@@ -31,7 +31,7 @@ exports.findCardsByBoardId = (boardId) => {
           model: Card,
           where: { boardId: boardId },
           attributes: {
-            exclude: ["createdAt", "updatedAt", , "boardId"],
+            exclude: ["createdAt", "updatedAt", "boardId"],
           },
           include: {
             model: Task,
@@ -39,7 +39,6 @@ exports.findCardsByBoardId = (boardId) => {
               exclude: [
                 "createdAt",
                 "updatedAt",
-                ,
                 "attachmentId",
                 "cardId",
                 "commentId",
@@ -51,7 +50,7 @@ exports.findCardsByBoardId = (boardId) => {
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", , "id"],
+                  exclude: ["createdAt", "updatedAt","id"],
                 },
               },
               {
@@ -228,6 +227,11 @@ exports.findLabel = (boardId) => {
     },
   });
 };
+exports.updateCard = (data, name, position) =>
+  Card.update({ name, position }, { where: { id: data.id } });
+exports.createCard = (data) => Card.create(data);
+
+exports.updateCardName = (id, name) => Card.update({ name }, { where: { id } });
 
 ////add
 exports.findBoardById = (boardId) =>
@@ -272,7 +276,17 @@ exports.findTaskByCardId = (cardId) => {
   return Card.findAll({
     where: { id: cardId },
     attributes: {
-      exclude: ["createdAt", "updatedAt", , "name", "description", "userId"],
+      exclude: [
+        "createdAt",
+        "updatedAt",
+        ,
+        "name",
+        "description",
+        "position",
+        "dueDate",
+        "labelId",
+        "userId",
+      ],
     },
     include: [
       {
@@ -282,13 +296,19 @@ exports.findTaskByCardId = (cardId) => {
       {
         model: Attachment,
         attributes: {
-          exclude: ["createdAt", "updatedAt", , "file", "userId"],
+          exclude: ["createdAt", "updatedAt", "file", "userId"],
         },
       },
       {
         model: Comment,
         attributes: {
-          exclude: ["createdAt", "updatedAt", , "comment", "userId"],
+          exclude: ["createdAt", "updatedAt", "comment", "userId"],
+        },
+      },
+      {
+        model: Comment,
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "deletedAt", "comment", "userId"],
         },
       },
       {

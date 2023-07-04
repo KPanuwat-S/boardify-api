@@ -11,6 +11,7 @@ const {
   Comment,
   Attachment,
   sequelize,
+  User,
 } = require("../models");
 exports.findTaskById = (id) => {
   return Workspace.findOne({
@@ -25,20 +26,20 @@ exports.findTaskById = (id) => {
           model: Card,
 
           attributes: {
-            exclude: ["createdAt", "updatedAt", "boardId"],
+            exclude: ["createdAt", "updatedAt","boardId"],
           },
 
           include: {
             model: Task,
             where: { id },
             attributes: {
-              exclude: ["createdAt", "updatedAt", "cardId"],
+              exclude: ["createdAt", "updatedAt","cardId"],
             },
             include: [
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt", "id"],
+                  exclude: ["createdAt", "updatedAt","id"],
                 },
               },
               {
@@ -52,6 +53,7 @@ exports.findTaskById = (id) => {
               },
               {
                 model: TaskMember,
+                include: User,
                 attributes: {
                   exclude: ["createdAt", "updatedAt"],
                 },
@@ -83,3 +85,31 @@ exports.findTaskByCardIdMax = (cardId) =>
     order: [[sequelize.literal("position"), "DESC"]],
     limit: 1,
   });
+<<<<<<< HEAD
+=======
+  console.log("checklistObject", checklistObject);
+};
+exports.updateChecklistItems = (checklistObject) =>
+  ChecklistItem.update(
+    {
+      description: checklistObject.description,
+      isChecked: checklistObject.isChecked,
+      taskId: checklistObject.taskId,
+    },
+    { where: { id: checklistObject.id } }
+  );
+
+exports.deleteChecklist = (checklistId) =>
+  ChecklistItem.destroy({ where: { id: checklistId } });
+
+// exports.findTask = (id) => Task.id
+
+exports.addMemberToTask = (taskId, userId) =>
+  TaskMember.create({ taskId: taskId, userId: userId });
+
+exports.removeMemberFromTask = (taskId, userId) =>
+  TaskMember.destroy({ where: { taskId: taskId, userId: userId } });
+
+exports.getMemberInTask = (taskId) =>
+  TaskMember.findAll({ where: { taskId: taskId } });
+>>>>>>> develop

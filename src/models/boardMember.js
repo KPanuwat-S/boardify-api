@@ -1,7 +1,11 @@
 module.exports = (sequelize, Datatypes) => {
-  const BoardMember = sequelize.define("BoardMember",{}, {
-    underscored: true,
-  });
+  const BoardMember = sequelize.define(
+    "BoardMember",
+    {},
+    {
+      underscored: true,
+    }
+  );
 
   BoardMember.associate = (models) => {
     BoardMember.belongsTo(models.User, {
