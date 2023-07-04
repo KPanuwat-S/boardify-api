@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

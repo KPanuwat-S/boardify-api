@@ -6,7 +6,12 @@ const router = express.Router();
 
 router.get("/searchUser", memberController.searchUser);
 router.get("/searchAddMember", memberController.searchAddMember);
-router.get("/getWorkspaceMember", memberController.getWorkspaceMember);
 router.post("/addMember", memberController.addMember);
+router.get("/getWorkspaceMember/:id", memberController.getWorkspaceMember);
+router.get("/getMemberRole/", memberController.getMemberRole);
+router.delete(
+  "/deleteWorkspaceMember/",
+  memberController.deleteWorkspaceMember
+);
 
 module.exports = router;
