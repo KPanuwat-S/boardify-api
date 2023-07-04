@@ -7,46 +7,6 @@ exports.getCardsByBoardId = async (req, res, next) => {
     const board = req.params;
     console.log(board);
     const cardData = await cardService.findCardsByBoardId(board.id);
-    //memberTask
-    const checkCard = await cardService.findCardByBoard(board.id);
-    const newCardData = checkCard.map((el) => el.id);
-    const checkTaskData = await cardService.findTaskByCard(newCardData);
-    const newTaskData = checkTaskData.map((el) => el.id);
-    const checkTaskMember = await cardService.findTaskMemberById(newTaskData);
-    const countDataMember = checkTaskMember.reduce((acc, cur) => {
-      const idx = acc.findIndex((el) => cur.User.firstName === el.firstName);
-      if (idx !== -1) {
-        acc[idx].totalTask += 1;
-      } else {
-        const obj = {
-          firstName: cur.User.firstName,
-          totalTask: 1,
-        };
-        acc.push(obj);
-      }
-      return acc;
-    }, []);
-    // /label
-    const [labelData] = await cardService.findLabel(board.id);
-    const labelMap = {};
-    labelData.Cards.forEach((card) => {
-      card.Tasks.forEach((task) => {
-        const { labelId, Label } = task;
-        const labelName = Label.description;
-
-        if (!labelMap[labelId]) {
-          labelMap[labelId] = {
-            id: labelId,
-            labelName: labelName,
-            taskTotal: 0,
-          };
-        }
-
-        labelMap[labelId].taskTotal++;
-      });
-    });
-
-    const convertedData = Object.values(labelMap);
     //fetch Data
     const fetchData = cardData.map((el) => {
       const [boardIdData] = el.Boards.map((el) => el.id);
@@ -94,12 +54,64 @@ exports.getCardsByBoardId = async (req, res, next) => {
         boardName: boardNameData,
         members: membersData,
         cards: cardsData.sort((a, b) => a.cardPosition - b.cardPosition),
-        taskLabel: convertedData,
-        taskMembersData: countDataMember,
       });
     });
 
     res.status(200).json(fetchData);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getDashBoard = async (req, res, next) => {
+  try {
+    const board = req.params;
+
+    const checkCard = await cardService.findCardByBoard(board.id);
+    const newCardData = checkCard.map((el) => el.id);
+    const checkTaskData = await cardService.findTaskByCard(newCardData);
+    const newTaskData = checkTaskData.map((el) => el.id);
+    const checkTaskMember = await cardService.findTaskMemberById(newTaskData);
+    //memberTask
+    const countDataMember = checkTaskMember.reduce((acc, cur) => {
+      const idx = acc.findIndex((el) => cur.User.firstName === el.firstName);
+      if (idx !== -1) {
+        acc[idx].totalTask += 1;
+      } else {
+        const obj = {
+          firstName: cur.User.firstName,
+          totalTask: 1,
+        };
+        acc.push(obj);
+      }
+      return acc;
+    }, []);
+    // /label
+    const [labelData] = await cardService.findLabel(board.id);
+    const labelMap = {};
+    labelData.Cards.forEach((card) => {
+      card.Tasks.forEach((task) => {
+        const { labelId, Label } = task;
+        const labelName = Label.description;
+
+        if (!labelMap[labelId]) {
+          labelMap[labelId] = {
+            id: labelId,
+            labelName: labelName,
+            taskTotal: 0,
+          };
+        }
+
+        labelMap[labelId].taskTotal++;
+      });
+    });
+
+    const convertedData = Object.values(labelMap);
+    const data = {
+      taskLabel: convertedData,
+      taskMemberData: countDataMember,
+    };
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }
@@ -141,7 +153,7 @@ exports.updateNameCard = async (req, res, next) => {
     if (!checkCardById) createError("Not found", 400);
     const cardData = await cardService.updateCardByName(data.name, data.cardId);
     // if (!cardData) createError("try again", 400);
-    res.json(data);
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }

@@ -7,6 +7,7 @@ const upload = require("../middlewares/upload");
 const router = express.Router();
 
 router.get("/cards/:id", cardsController.getCardsByBoardId);
+router.get("/dashBoard/:id", cardsController.getDashBoard);
 router.post("/cards/:id", cardsController.addCard);
 router.patch("/cardsDnd/:id", cardsController.updateCard);
 router.patch("/cardsName/:id", cardsController.updateNameCard);
