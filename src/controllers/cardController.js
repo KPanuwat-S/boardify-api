@@ -142,6 +142,7 @@ exports.addCard = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.updateNameCard = async (req, res, next) => {
   try {
     const boardId = req.params;
@@ -212,6 +213,7 @@ exports.updateCardName = async (req, res, next) => {
     next(err);
   }
 };
+
 exports.deleteCard = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
