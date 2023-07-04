@@ -39,4 +39,7 @@ router.patch("/tasks/:id", taskController.updateTask);
 router.delete("/tasks/:id", taskController.deleteTaskById);
 //require taskId
 
+// deleteboard
+router.delete("/deleteboard/:id", boardsController.deleteBoard);
+
 module.exports = router;

@@ -1,28 +1,29 @@
 const { WorkspaceMember, Board, Workspace, User } = require("../models");
 const { Op } = require("sequelize");
 exports.getWorkspaces = async (id) => {
-  return await WorkspaceMember.findAll({
+  const data = await WorkspaceMember.findAll({
     where: { userId: id },
     include: [{ model: Workspace, include: { model: Board } }],
   });
 
-  const countMember = await Promise.all(data.map( async (el, idx) => {
-    const id = el.workspaceId
-    const countMember = await WorkspaceMember.count({
-      where: { workspaceId: id }
-    });
+  const countMember = await Promise.all(
+    data.map(async (el, idx) => {
+      const id = el.workspaceId;
+      const countMember = await WorkspaceMember.count({
+        where: { workspaceId: id },
+      });
 
-    return countMember
-  })
-)
-  console.log("-------- count : ",countMember);
+      return countMember;
+    })
+  );
+  // console.log("-------- count : ",countMember);
 
   const newData = data.map((el, index) => ({
     ...el.toJSON(),
     count: countMember[index],
   }));
 
-  console.log(newData);
+  // console.log(newData);
 
   return newData;
 };
@@ -74,6 +75,19 @@ exports.getWorkspaceById = async (workspaceId) => {
   const data = await Workspace.findOne({
     where: { id: workspaceId },
   });
-  return data;
-};
 
+  // console.log("xxxxxxxx------- :", data);
+
+  const countMember = await WorkspaceMember.count({
+    where: { workspaceId: data.id },
+  });
+
+  const dataObj = JSON.parse(JSON.stringify(data));
+
+  const newData = { ...dataObj, count: countMember };
+  // console.log("lllllllllll----", newData);
+
+  return newData;
+
+  // return data;
+};
