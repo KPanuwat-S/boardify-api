@@ -154,6 +154,7 @@ exports.updateNameCard = async (req, res, next) => {
     if (!checkCardById) createError("Not found", 400);
     const cardData = await cardService.updateCardByName(data.name, data.cardId);
     // if (!cardData) createError("try again", 400);
+    
     res.status(200).json(data);
   } catch (error) {
     next(error);
@@ -165,12 +166,14 @@ exports.updateCard = async (req, res, next) => {
   try {
     const cards = req.body;
     const boardId = req.params;
+    console.log(boardId)
     if (cards.length <= 0) createError("CardData is required", 400);
     if (!boardId) createError("params is required", 400);
     const cardData = await cards.map((card, idx) => {
-      return cardService.updateCard(card, idx, boardId.id);
+      return cardService.updateCardDnd(card, idx, boardId.id);
     });
-    const taskData = await cards.tas;
+    // const taskData = await cards.tas;
+    // res.status(200).json(cardData);
     res.status(200).json(cardData);
   } catch (error) {
     next(error);
@@ -180,6 +183,7 @@ exports.updateTask = async (req, res, next) => {
   try {
     const cards = req.body;
     const boardId = req.params;
+    console.log('boardId', boardId)
     if (cards.length <= 0) createError("CardData is required", 400);
     if (!boardId) createError("params is required", 400);
     // for (const data of cards) {
@@ -187,6 +191,8 @@ exports.updateTask = async (req, res, next) => {
     //     return cardService.updateTask((task, index, data.cardId));
     //   });
     // }
+
+
     const cardData = await Promise.all(
       cards.map(async (card, idx) => {
         await Promise.all(

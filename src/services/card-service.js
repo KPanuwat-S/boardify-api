@@ -227,8 +227,10 @@ exports.findLabel = (boardId) => {
     },
   });
 };
-exports.updateCard = (data, name, position) =>
+exports.updateCard = (data, name, position) => {
+  console.log(data,)
   Card.update({ name, position }, { where: { id: data.id } });
+}
 exports.createCard = (data) => Card.create(data);
 
 exports.updateCardName = (id, name) => Card.update({ name }, { where: { id } });
@@ -258,11 +260,10 @@ exports.findCardById = (boardId, id) => {
   });
 };
 //update Dnd
-exports.updateCard = (card, index, boardId) => {
-  console.log(card, index, boardId);
-  Card.update(
+exports.updateCardDnd = (card, index, boardId) => {
+  return Card.update(
     { position: +index + 1 },
-    { where: { boardId, id: card.cardId } }
+    { where: { boardId, id: card.id } }
   );
 };
 exports.updateTask = (data, index, cardId) =>
