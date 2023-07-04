@@ -8,7 +8,6 @@ router.get("/workspace/:workspaceId", workSpaceController.getOneWorkSpace);
 router.get(
   "/members/:workspaceId",
   workSpaceController.getAllMembersInWorkspace
-  workSpaceController.getAllMembersInWorkspace
 );
 router.post("/", workSpaceController.createWorkspaceById);
 router.delete("/:id", workSpaceController.deleteWorkspaceById);

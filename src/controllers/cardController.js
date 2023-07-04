@@ -7,6 +7,47 @@ exports.getCardsByBoardId = async (req, res, next) => {
     const board = req.params;
     console.log(board);
     const cardData = await cardService.findCardsByBoardId(board.id);
+    //memberTask
+    const checkCard = await cardService.findCardByBoard(board.id);
+    const newCardData = checkCard.map((el) => el.id);
+    const checkTaskData = await cardService.findTaskByCard(newCardData);
+    const newTaskData = checkTaskData.map((el) => el.id);
+    const checkTaskMember = await cardService.findTaskMemberById(newTaskData);
+    const countDataMember = checkTaskMember.reduce((acc, cur) => {
+      const idx = acc.findIndex((el) => cur.User.firstName === el.firstName);
+      if (idx !== -1) {
+        acc[idx].totalTask += 1;
+      } else {
+        const obj = {
+          firstName: cur.User.firstName,
+          totalTask: 1,
+        };
+        acc.push(obj);
+      }
+      return acc;
+    }, []);
+    // /label
+    const [labelData] = await cardService.findLabel(board.id);
+    const labelMap = {};
+    labelData.Cards.forEach((card) => {
+      card.Tasks.forEach((task) => {
+        const { labelId, Label } = task;
+        const labelName = Label.description;
+
+        if (!labelMap[labelId]) {
+          labelMap[labelId] = {
+            id: labelId,
+            labelName: labelName,
+            taskTotal: 0,
+          };
+        }
+
+        labelMap[labelId].taskTotal++;
+      });
+    });
+
+    const convertedData = Object.values(labelMap);
+    //fetch Data
     const fetchData = cardData.map((el) => {
       const [boardIdData] = el.Boards.map((el) => el.id);
       const [boardNameData] = el.Boards.map((el) => el.name);
@@ -25,7 +66,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
                 taskType: el.type,
                 taskDescription: el.description,
                 taskPosition: el.position,
-                // labelId: el.Label?.id,
+                labelId: el.Label?.id,
                 labelColor: el.Label?.color,
                 labelDescription: el.Label?.description,
                 checkListsTotal: el.ChecklistItems?.length,
@@ -38,10 +79,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
                   return acc;
                 }, 0),
                 dueDate: el.dueDate,
-                commentsNumber: el.Comments.length,
-
                 members: el.TaskMembers,
-                numberOfFilesAttached: el.Attachment,
               });
             }),
           };
@@ -56,11 +94,12 @@ exports.getCardsByBoardId = async (req, res, next) => {
         boardName: boardNameData,
         members: membersData,
         cards: cardsData.sort((a, b) => a.cardPosition - b.cardPosition),
+        taskLabel: convertedData,
+        taskMembersData: countDataMember,
       });
     });
 
-    const data = fetchData;
-    res.status(200).json(data);
+    res.status(200).json(fetchData);
   } catch (error) {
     next(error);
   }
@@ -72,6 +111,7 @@ exports.addCard = async (req, res, next) => {
     const boardId = req.params;
     const uuid = uuidv4();
     const newId = uuid + "card";
+    console.log(newId);
     if (!data.name) createError("Is require", 400);
     const checkBoardById = await cardService.findBoardById(boardId.id);
     if (!checkBoardById) createError("Not Found", 400);
@@ -81,15 +121,31 @@ exports.addCard = async (req, res, next) => {
       ...data,
       boardId: boardId.id,
       position: +checkPosition.position + 1,
-      typeName: newId,
+      type: newId,
     };
+    console.log(newData);
     const cardData = await cardService.createCard(newData);
     res.status(200).json(cardData);
   } catch (error) {
     next(error);
   }
 };
-// exports.updateCardByName = async (req, res, next) => {};
+exports.updateNameCard = async (req, res, next) => {
+  try {
+    const boardId = req.params;
+    const data = req.body;
+    const checkCardById = await cardService.findCardById(
+      boardId.id,
+      data.cardId
+    );
+    if (!checkCardById) createError("Not found", 400);
+    const cardData = await cardService.updateCardByName(data.name, data.cardId);
+    // if (!cardData) createError("try again", 400);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+};
 exports.updateCard = async (req, res, next) => {
   // require (name||type) || position , cardId
   // require source = [index,data] , destination = [index,data] , itemSource = [index,data,taskId] , itemDestination = [index,data,]

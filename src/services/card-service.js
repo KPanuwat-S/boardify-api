@@ -82,6 +82,152 @@ exports.findCardsByBoardId = (boardId) => {
     },
   });
 };
+exports.findCardByBoard = (boardId) => {
+  return Card.findAll({
+    where: { boardId },
+    attributes: {
+      exclude: [
+        "createdAt",
+        "updatedAt",
+        "type",
+        "name",
+        "position",
+        "boardId",
+      ],
+    },
+  });
+};
+exports.findTaskByCard = (newData) => {
+  return Task.findAll({
+    where: {
+      cardId: { [Op.in]: newData },
+    },
+    attributes: {
+      exclude: [
+        "createdAt",
+        "updatedAt",
+        "type",
+        "name",
+        "position",
+        "description",
+        "attachmentId",
+        "cardId",
+        "labelId",
+      ],
+    },
+  });
+};
+exports.findTaskMemberById = (taskId) => {
+  return TaskMember.findAll({
+    where: {
+      taskId: { [Op.in]: taskId },
+    },
+    attributes: {
+      exclude: ["createdAt", "updatedAt"],
+    },
+    include: [
+      {
+        model: Task,
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "name",
+            "description",
+            "position",
+            "dueDate",
+            "type",
+            "attachmentId",
+            "cardId",
+            "labelId",
+            "userId",
+          ],
+        },
+      },
+      {
+        model: User,
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "lastName",
+            "password",
+            "email",
+            "isVerify",
+            "googleId",
+          ],
+        },
+      },
+    ],
+  });
+};
+exports.findUserById = (data) => {
+  return User.findAll({
+    where: {
+      id: { [Op.in]: data },
+    },
+    attributes: {
+      exclude: ["createdAt", "updatedAt"],
+    },
+  });
+};
+exports.findLabel = (boardId) => {
+  return Board.findAll({
+    where: { id: boardId },
+    attributes: {
+      exclude: [
+        "createdAt",
+        "updatedAt",
+        "name",
+        "userId",
+        "workspaceId",
+        "id",
+      ],
+    },
+    include: {
+      model: Card,
+      attributes: {
+        exclude: [
+          "createdAt",
+          "updatedAt",
+          "name",
+          "userId",
+          "workspaceId",
+          "boardId",
+          "position",
+          "type",
+        ],
+      },
+      where: { boardId },
+      include: {
+        model: Task,
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "name",
+            "userId",
+            "boardId",
+            "position",
+            "type",
+            "description",
+            "attachmentId",
+            "cardId",
+          ],
+        },
+        include: [
+          {
+            model: Label,
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "color", "id"],
+            },
+          },
+        ],
+      },
+    },
+  });
+};
+
 ////add
 exports.findBoardById = (boardId) =>
   Board.findOne({
@@ -116,7 +262,10 @@ exports.updateCard = (card, index, boardId) => {
 };
 exports.updateTask = (data, index, cardId) =>
   Task.update({ position: +index + 1, cardId }, { where: { id: data.taskId } });
-
+//updateName
+exports.updateCardByName = (name, id) => {
+  return Card.update({ name }, { where: { id } });
+};
 ///delete
 exports.findTaskByCardId = (cardId) => {
   return Card.findAll({

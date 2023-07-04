@@ -34,6 +34,7 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
+    console.log("hi");
     const value = validateLogin(req.body);
 
     const userBeforeEmailVerify = await User.findOne({

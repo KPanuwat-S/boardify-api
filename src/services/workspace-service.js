@@ -23,7 +23,6 @@ exports.createMemberByUserId = (userId, workspaceId) =>
 ////////////delete
 exports.findAdminById = (workspaceId, userId) =>
   Workspace.findOne({
-  Workspace.findOne({
     where: { [Op.and]: [{ id: workspaceId }, { userId }] },
   });
 exports.deleteMemberWorkspaceById = (workspaceId, t) =>
