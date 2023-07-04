@@ -1,5 +1,6 @@
 const cardService = require("../services/card-service");
 const createError = require("../utils/createError");
+const { v4: uuidv4 } = require("uuid");
 
 exports.getCardsByBoardId = async (req, res, next) => {
   try {
@@ -86,6 +87,16 @@ exports.addCard = async (req, res, next) => {
   }
 };
 
+exports.updateCardName = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const editCardName = await cardService.updateCardName(id, name);
+    res.status(200).json(editCardName);
+  } catch (err) {
+    next(err);
+  }
+};
 exports.updateNameCard = async (req, res, next) => {
   // require (name||type) || position , cardId
   // require source = [index,data] , destination = [index,data] , itemSource = [index,data,taskId] , itemDestination = [index,data,]
@@ -104,17 +115,6 @@ exports.updateNameCard = async (req, res, next) => {
     );
     if (!cardData) createError("try again", 400);
     res.json(cardData);
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.updateCardName = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { name } = req.body;
-    const editCardName = await cardService.updateCardName(id, name);
-    res.status(200).json(editCardName);
   } catch (err) {
     next(err);
   }

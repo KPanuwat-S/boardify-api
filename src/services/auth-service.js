@@ -11,3 +11,5 @@ exports.getUserById = (id) => User.findOne({ where: { id: id } });
 
 exports.findByGoogleId = (googleId) =>
   User.findOne({ where: { googleId: googleId } });
+
+exports.findByEmail = (email) => User.findOne({ where: { email } });

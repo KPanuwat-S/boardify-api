@@ -18,7 +18,7 @@ router.post("/cards/:id", cardsController.addCard);
 router.patch("/updateCard/", cardsController.updateNameCard);
 router.delete("/cards/:id", cardsController.deleteCard);
 router.patch("/cards/card/:id", cardsController.updateCardName);
-router.patch("/test", cardsController.test);
+// router.patch("/test", cardsController.test);
 router.patch("/updateCard/:id", cardsController.updateNameCard);
 
 // router.post("/tasks/member", taskController.addMeToTask);
