@@ -32,7 +32,7 @@ exports.findCardsByBoardId = (boardId) => {
           model: Card,
           where: { boardId: boardId },
           attributes: {
-            exclude: ["createdAt", "updatedAt",  "boardId"],
+            exclude: ["createdAt", "updatedAt", "boardId"],
           },
 
           include: {
@@ -99,6 +99,8 @@ exports.findCardById = (boardId, cardId) => {
 exports.updateCard = (data, name, position) =>
   Card.update({ name, position }, { where: { id: data.id } });
 exports.createCard = (data) => Card.create(data);
+
+exports.updateCardName = (id, name) => Card.update({ name }, { where: { id } });
 
 exports.deleteCardById = (cardId) => Card.destroy({ where: { id: cardId.id } });
 
