@@ -109,4 +109,4 @@ exports.removeMemberFromTask = (taskId, userId) =>
   TaskMember.destroy({ where: { taskId: taskId, userId: userId } });
 
 exports.getMemberInTask = (taskId) =>
-  TaskMember.findAll({ where: { taskId: taskId } });
+  TaskMember.findAll({ where: { taskId: taskId.id } });

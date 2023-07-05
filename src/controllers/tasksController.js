@@ -220,10 +220,12 @@ exports.addMemberToTask = async (req, res, next) => {};
 exports.getMembersInTask = async (req, res, next) => {
   try {
     // const { taskId } = req.body;
-    const { id } = req.params;
+    const id = req.params;
+    console.log("------ :", id);
     // console.log("taskIdin", taskId);
     const members = await taskService.getMemberInTask(id);
-    console.log("member", members);
+    if(!members && members.length > 0) createError("error zaza",400)
+    // console.log("member--------------------------", members);
     res.status(200).json(members);
   } catch (err) {
     next(err);
