@@ -11,7 +11,7 @@ const createError = require("../utils/createError");
 exports.searchUser = async (req, res, next) => {
   try {
     const { value } = req.query;
-    // console.log("adasd", value);
+    console.log("adasd", value);
 
     const email = await memberService.filterAllUser(value);
 
