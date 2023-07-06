@@ -17,7 +17,7 @@ exports.getTaskById = async (req, res, next) => {
     //   }));
     // });
 
-// console.log("--------------",taskData.Boards)
+    // console.log("--------------",taskData.Boards)
     const newData = await taskData.Boards.map((el) => {
       if (el.Cards.length > 0)
         return (newTaskId = el.Cards?.map((el) => {
@@ -72,6 +72,7 @@ exports.updateTask = async (req, res, next) => {
 
     if (!id) createError("Task id is required", 400);
     console.log("updateTaskinBackend is running");
+    console.log("updateTaskinBackend is running", data.name);
     const taskData = await taskService.updateTaskById(
       data.name,
       data.description,
@@ -80,9 +81,11 @@ exports.updateTask = async (req, res, next) => {
       data.labelId,
       data.attachment,
       user.id,
-      data.dueDate,
-      id
+      id,
+      data.dueDate
     );
+
+    console.log("taskData", taskData);
     // if (data.attachment > 0) {
     //   for (const el of data) {
     //     await taskService.updateTaskByAttachmentId(el.attachmentId, id);
@@ -96,7 +99,7 @@ exports.updateTask = async (req, res, next) => {
     // if (el.attachmentId)
     //   await taskService.updateTaskByAttachmentId(el.attachmentId, id);
 
-    res.status(200).json(id);
+    res.status(200).json(taskData);
   } catch (error) {
     next(error);
   }
@@ -224,7 +227,7 @@ exports.getMembersInTask = async (req, res, next) => {
     console.log("------ :", id);
     // console.log("taskIdin", taskId);
     const members = await taskService.getMemberInTask(id);
-    if(!members && members.length > 0) createError("error zaza",400)
+    if (!members && members.length > 0) createError("error zaza", 400);
     // console.log("member--------------------------", members);
     res.status(200).json(members);
   } catch (err) {

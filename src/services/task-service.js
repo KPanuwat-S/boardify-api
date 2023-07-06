@@ -26,20 +26,20 @@ exports.findTaskById = (id) => {
           model: Card,
 
           attributes: {
-            exclude: ["createdAt", "updatedAt","boardId"],
+            exclude: ["createdAt", "updatedAt", "boardId"],
           },
 
           include: {
             model: Task,
             where: { id },
             attributes: {
-              exclude: ["createdAt", "updatedAt","cardId"],
+              exclude: ["createdAt", "updatedAt", "cardId"],
             },
             include: [
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt","id"],
+                  exclude: ["createdAt", "updatedAt", "id"],
                 },
               },
               {
@@ -72,14 +72,45 @@ exports.findTaskById = (id) => {
   });
 };
 exports.deleteTaskById = (id) => Task.destroy({ where: { id } });
-exports.updateTaskById = ({ name, description, cardId, labelId, userId, id }) =>
-  Task.update(
-    { name, description, cardId, labelId, userId },
+exports.updateTaskById = (
+  name,
+  description,
+  position,
+  cardId,
+  labelId,
+  attachment,
+  userId,
+  id,
+  dueDate
+) => {
+  console.log("data to db", {
+    name,
+    description,
+    position,
+    cardId,
+    labelId,
+    attachment,
+    userId,
+    id,
+    dueDate,
+  });
+  return Task.update(
+    {
+      name,
+      description,
+      cardId,
+      labelId,
+      userId,
+      dueDate,
+      position,
+      attachment,
+    },
     { where: { id } }
   );
+};
 //addtask
 exports.findCardById = (id) => Card.findAll({ where: { id } });
-exports.findTaskByCardIdMax = (cardId) =>{
+exports.findTaskByCardIdMax = (cardId) => {
   Task.findAll({
     where: { cardId },
     order: [[sequelize.literal("position"), "DESC"]],
