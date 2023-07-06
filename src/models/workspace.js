@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -27,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "workspaceId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Workspace.hasMany(models.WorkspaceMember, {
@@ -35,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "workspaceId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 

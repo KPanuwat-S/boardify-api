@@ -7,20 +7,30 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
       },
       position: {
         type: DataTypes.INTEGER,
+        // unique: true,
         allowNull: false,
       },
       dueDate: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
       },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      isDone: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      }
     },
     {
       underscored: true,
-      paranoid: true,
     }
   );
 
@@ -38,31 +48,31 @@ module.exports = (sequelize, DataTypes) => {
         name: "cardId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Task.belongsTo(models.Label, {
       foreignKey: {
         name: "labelId",
-        allowNull: false,
+        // allowNull: true,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
-    Task.belongsTo(models.Attachment, {
+    Task.hasOne(models.Attachment, {
       foreignKey: {
         name: "attachmentId",
-        allowNull: false,
+        allowNull: true,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
-    Task.belongsTo(models.Comment, {
+    Task.hasMany(models.Comment, {
       foreignKey: {
-        name: "commentId",
+        name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Task.hasMany(models.ChecklistItem, {
@@ -70,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
 
     Task.hasMany(models.TaskMember, {
@@ -78,7 +88,7 @@ module.exports = (sequelize, DataTypes) => {
         name: "taskId",
         allowNull: false,
       },
-      onDelete: "RESTRICT",
+      onDelete: "CASCADE",
     });
   };
 
