@@ -81,6 +81,7 @@ exports.updateTask = async (req, res, next) => {
     const user = req.user;
     console.log("data from be", data);
 
+    console.log("-----------------------data", data);
     if (!id) createError("Task id is required", 400);
     console.log("updateTaskinBackend is running");
     console.log("updateTaskinBackend is running", data.name);
@@ -93,7 +94,8 @@ exports.updateTask = async (req, res, next) => {
       data.attachment,
       user.id,
       id,
-      data.dueDate
+      data.dueDate,
+      data.isDone
     );
 
     console.log("taskData", taskData);

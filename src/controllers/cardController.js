@@ -40,6 +40,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
                 }, 0),
                 dueDate: el.dueDate,
                 members: el.TaskMembers,
+                isDone: el.isDone,
               });
             }),
           };

@@ -81,7 +81,8 @@ exports.updateTaskById = (
   attachment,
   userId,
   id,
-  dueDate
+  dueDate,
+  isDone
 ) => {
   console.log("data to db", {
     name,
@@ -104,6 +105,7 @@ exports.updateTaskById = (
       dueDate,
       position,
       attachment,
+      isDone,
     },
     { where: { id } }
   );
