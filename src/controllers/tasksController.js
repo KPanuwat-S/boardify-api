@@ -1,6 +1,7 @@
 const createError = require("../utils/createError");
 const taskService = require("../services/task-service");
 const { sequelize } = require("../models");
+const { Task } = require("../models");
 exports.getTaskById = async (req, res, next) => {
   try {
     const user = req.user;
@@ -40,9 +41,19 @@ exports.addTask = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { taskName, position } = req.body;
+    console.log("req.body---------------------", req.body);
     const user = req.user;
+    const typeNumber = await Task.count();
+    const type = `task-${typeNumber + 1}`;
 
-    const input = { name: taskName, position, userId: user.id, cardId: id };
+    const input = {
+      name: taskName,
+      type,
+      position,
+      userId: user.id,
+      cardId: +id,
+      isDone: 0,
+    };
     console.log("input", input);
     const addedTask = await taskService.addTask(input);
     res.status(200).json(addedTask);
@@ -107,6 +118,7 @@ exports.updateTask = async (req, res, next) => {
 
 exports.addChecklist = async (req, res, next) => {
   const data = req.body;
+  console.log("data-----", data);
   const { id } = req.params;
   try {
     const response = await taskService.addChecklist(data);

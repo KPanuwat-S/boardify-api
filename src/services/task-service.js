@@ -109,6 +109,7 @@ exports.updateTaskById = (
   );
 };
 //addtask
+exports.addTask = (input) => Task.create(input);
 exports.findCardById = (id) => Card.findAll({ where: { id } });
 exports.findTaskByCardIdMax = (cardId) => {
   Task.findAll({
@@ -118,6 +119,14 @@ exports.findTaskByCardIdMax = (cardId) => {
   });
   console.log("checklistObject", checklistObject);
 };
+
+exports.addChecklist = (checklistObject) => {
+  return ChecklistItem.create({
+    description: checklistObject.description,
+    taskId: checklistObject.taskId,
+  });
+};
+
 exports.updateChecklistItems = (checklistObject) =>
   ChecklistItem.update(
     {

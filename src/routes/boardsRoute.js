@@ -11,13 +11,16 @@ router.post("/", boardsController.createBoard);
 // Get all boards in the workspace
 router.get("/:workspaceId", boardsController.getAllBoardsByWorkspaceId);
 router.get("/board/:id", boardsController.getOneBoard);
+
 router.patch("/board/:id", boardsController.editBoardName);
 router.get("/cards/:id", cardsController.getCardsByBoardId);
 router.get("/dashBoard/:id", cardsController.getDashBoard);
 router.post("/cards/:id", cardsController.addCard);
+
 router.patch("/cardsDnd/:id", cardsController.updateCardDnd);
 router.patch("/cardsName/:id", cardsController.updateNameCard);
 router.patch("/tasksDnd/:id", cardsController.updateTask);
+
 router.delete("/cards/:id", cardsController.deleteCard);
 router.patch("/cards/card/:id", cardsController.updateCardName);
 // router.patch("/updateCard/:id", cardsController.updateNameCard);
@@ -36,6 +39,7 @@ router.patch("/tasks/checklists", taskController.editChecklist);
 
 router.patch("/tasks/:id", taskController.updateTask);
 router.delete("/tasks/:id", taskController.deleteTaskById);
+router.delete("/tasks/checklists/:id", taskController.deleteChecklistById);
 //require taskId
 
 // deleteboard
