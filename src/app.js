@@ -36,7 +36,7 @@ app.use("/stripe", stripeRoute);
 app.use("/workspaces", authenticate, workspaceRoute);
 app.use("/boards", authenticate, boardsRoute);
 app.use("/member", memberRoute);
-app.use("/myProfile", myProfileRoute);
+app.use("/myProfile", authenticate, myProfileRoute);
 // app.use("/", res.send({ message: "Hi Boardify" }));
 
 app.use(notFoundMiddleware);

@@ -6,6 +6,6 @@ const authenticate = require("../middlewares/authenticate");
 
 const router = express.Router();
 
-router.get("/project", authenticate, myProfileController.getproject);
+router.get("/project", myProfileController.getproject);
 
 module.exports = router;

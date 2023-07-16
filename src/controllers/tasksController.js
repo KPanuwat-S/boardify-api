@@ -2,6 +2,7 @@ const createError = require("../utils/createError");
 const taskService = require("../services/task-service");
 const { sequelize } = require("../models");
 const { Task } = require("../models");
+const { v4: uuidv4 } = require("uuid");
 exports.getTaskById = async (req, res, next) => {
   try {
     const user = req.user;
@@ -12,13 +13,7 @@ exports.getTaskById = async (req, res, next) => {
     const taskData = await taskService.findTaskById(task.id);
 
     console.log("taskData", taskData);
-    // const [newData]= await taskData.Boards.map((el) => {
-    //   return (newTaskId = el.Cards.map((el) => {
-    //     return el.Tasks;
-    //   }));
-    // });
 
-    // console.log("--------------",taskData.Boards)
     const newData = await taskData.Boards.map((el) => {
       if (el.Cards.length > 0)
         return (newTaskId = el.Cards?.map((el) => {
@@ -30,7 +25,6 @@ exports.getTaskById = async (req, res, next) => {
     const [[[toBeSentData]]] = newData.filter((value) => value != null);
     res.status(200).json(toBeSentData);
     // res.status(200).json(taskData);
-    // res.status(200).json(newData);
   } catch (error) {
     next(error);
   }
@@ -44,7 +38,7 @@ exports.addTask = async (req, res, next) => {
     console.log("req.body---------------------", req.body);
     const user = req.user;
     const typeNumber = await Task.count();
-    const type = `task-${typeNumber + 1}`;
+    const type = `task-${uuidv4()}`;
 
     const input = {
       name: taskName,

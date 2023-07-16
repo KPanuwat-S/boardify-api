@@ -47,17 +47,21 @@ exports.findTaskById = (id) => {
               },
               {
                 model: Comment,
+                include: { model: User },
                 attributes: {
                   exclude: ["createdAt", "updatedAt"],
                 },
               },
               {
                 model: TaskMember,
-                include: User,
+                include: { model: User },
                 attributes: {
                   exclude: ["createdAt", "updatedAt"],
                 },
               },
+              //
+
+              //
               {
                 model: Attachment,
                 attributes: {

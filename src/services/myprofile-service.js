@@ -16,7 +16,7 @@ const {
 
 // ?sort=board;order=asc
 // ?sort=dueDate;order=desc
-exports.getProject = async (id, sortBy) => {
+exports.getProject = async (userId, sortBy) => {
   const sortDefult = [];
   const sortBoard = [["name", "asc"]];
   const sortTask = [
@@ -38,19 +38,30 @@ exports.getProject = async (id, sortBy) => {
 
   console.log(order);
   console.log("order", order);
-  const data = await Board.findAll({
-    where: { userId: id },
-    include: [
-      {
+  // const data = await Board.findAll({
+  //   where: { userId: id },
+  //   include: [
+  //     {
+  //       model: Card,
+  //       include: [
+  //         {
+  //           model: Task,
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   order,
+  // });
+  // return data;
+  const data = await TaskMember.findAll({
+    where: { userId },
+    include: {
+      model: Task,
+      include: {
         model: Card,
-        include: [
-          {
-            model: Task,
-          },
-        ],
+        include: { model: Board, include: { model: Workspace } },
       },
-    ],
-    order,
+    },
   });
   return data;
 };
