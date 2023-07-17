@@ -72,7 +72,7 @@ exports.getDashBoard = async (req, res, next) => {
     const checkTaskData = await cardService.findTaskByCard(newCardData);
     const newTaskData = checkTaskData.map((el) => el.id);
     const checkTaskMember = await cardService.findTaskMemberById(newTaskData);
-    //memberTask
+    // //memberTask
     const countDataMember = checkTaskMember.reduce((acc, cur) => {
       const idx = acc.findIndex((el) => cur.User.firstName === el.firstName);
       if (idx !== -1) {
@@ -88,27 +88,30 @@ exports.getDashBoard = async (req, res, next) => {
     }, []);
     // /label
     const [labelData] = await cardService.findLabel(board.id);
-    const labelMap = {};
-    labelData.Cards.forEach((card) => {
-      card.Tasks.forEach((task) => {
-        const { labelId, Label } = task;
-        const labelName = Label.description;
+    const descriptionCountMap = {};
 
-        if (!labelMap[labelId]) {
-          labelMap[labelId] = {
-            id: labelId,
-            labelName: labelName,
-            taskTotal: 0,
-          };
+    labelData.Cards.forEach((item) => {
+      item.Tasks.forEach((task) => {
+        const { Label } = task;
+
+        if (Label && Label.description) {
+          const { description } = Label;
+
+          if (!descriptionCountMap[description]) {
+            descriptionCountMap[description] = {
+              description,
+              taskTotal: 0,
+            };
+          }
+
+          descriptionCountMap[description].taskTotal++;
         }
-
-        labelMap[labelId].taskTotal++;
       });
     });
 
-    const convertedData = Object.values(labelMap);
+    const result = Object.values(descriptionCountMap);
     const data = {
-      taskLabel: convertedData,
+      taskLabel: result,
       taskMemberData: countDataMember,
     };
     res.status(200).json(data);
