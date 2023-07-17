@@ -51,7 +51,7 @@ exports.createWorkspaceById = async (req, res, next) => {
     // await t.commit();
     if (data.members.length > 0) {
       await data.members.map((el) =>
-        workspaceService.createMemberByUserId(el.userId, result.id)
+        workspaceService.createMemberByUserId(el.id, result.id)
       );
     } else res.status(200).json({ msg: "Create Workspace Complete" });
     res.status(200).json(result);

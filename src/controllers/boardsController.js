@@ -1,5 +1,5 @@
 const boardService = require("../services/board-service");
-const { Board } = require("../models");
+const { Board, BoardMember } = require("../models");
 
 exports.createBoard = async (req, res, next) => {
   try {
@@ -13,6 +13,8 @@ exports.createBoard = async (req, res, next) => {
       workspaceId: data.workspaceId,
     };
     const value = await boardService.createBoard(board);
+
+    await BoardMember.create({ boardId: value.id, userId: user.id });
 
     res.status(200).json({
       message: "complete",

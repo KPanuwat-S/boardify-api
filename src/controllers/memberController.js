@@ -81,12 +81,14 @@ exports.getWorkspaceMember = async (req, res, next) => {
       )
     );
 
+    console.log("count : ", count);
+
     const newData = data.map((el, index) => ({
       ...el.toJSON(), // Convert the Sequelize instance to a plain JavaScript object
       count: count[index], // Add the corresponding count value
     }));
 
-    // console.log(newData);
+    console.log("-------------", newData);
 
     res.status(200).json(newData);
   } catch (error) {
