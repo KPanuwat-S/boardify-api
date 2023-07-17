@@ -1,6 +1,6 @@
 const workspaceService = require("../services/workspace-service");
 const createError = require("../utils/createError");
-const { WorkspaceMember } = require("../models");
+const { WorkspaceMember, Workspace } = require("../models");
 
 exports.getAllWorkspaces = async (req, res, next) => {
   try {
@@ -13,6 +13,7 @@ exports.getAllWorkspaces = async (req, res, next) => {
     next(err);
   }
 };
+
 exports.getOneWorkSpace = async (req, res, next) => {
   try {
     const { workspaceId } = req.params;
@@ -61,23 +62,29 @@ exports.createWorkspaceById = async (req, res, next) => {
 };
 
 exports.deleteWorkspaceById = async (req, res, next) => {
-  const t = await sequelize.transaction();
+  // const t = await sequelize.transaction();
   try {
-    const user = req.user;
-    const workspace = req.params;
-    if (!workspace.id) createError("Workspace id is required", 400);
-    const isAdmin = await workspaceService.findAdminById(workspace.id, user.id);
-    if (!isAdmin) createError("Unauthorized", 400);
-    const deleteMember = await workspaceService.deleteMemberWorkspaceById(
-      workspace.id,
-      t
-    );
-    if (!deleteMember) createError("Delete fail", 400);
-    await workspaceService.deleteWorkspaceById(workspace.id, t);
-    await t.commit();
-    res.status(200).json({ msg: "Delete Complete" });
+    // const user = req.user;
+    // const workspace = req.params;
+    // if (!workspace.id) createError("Workspace id is required", 400);
+    // const isAdmin = await workspaceService.findAdminById(workspace.id, user.id);
+    // if (!isAdmin) createError("Unauthorized", 400);
+    // const deleteMember = await workspaceService.deleteMemberWorkspaceById(
+    //   workspace.id,
+    //   t
+    // );
+    // if (!deleteMember) createError("Delete fail", 400);
+    // await workspaceService.deleteWorkspaceById(workspace.id, t);
+    // await t.commit();
+    // res.status(200).json({ msg: "Delete Complete" });
+    const id = req.params;
+    console.log("++++++++++++++",id);
+
+    await Workspace.destroy({ where: { id: id.id } });
+
+    res.status(204).json("Delete Success");
   } catch (error) {
-    await t.rollback();
+    // await t.rollback();
     next(error);
   }
 };

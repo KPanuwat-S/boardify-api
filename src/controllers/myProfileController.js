@@ -4,7 +4,7 @@ const createError = require("../utils/createError");
 exports.getproject = async (req, res, next) => {
   try {
     const { sortBy } = req.query;
-    console.log("req.query", req.query);
+    console.log("req.query----", req.query);
     const user = req.user;
     const projectData = await myprofileService.getProject(user.id, sortBy);
 

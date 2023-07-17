@@ -40,6 +40,7 @@ exports.getCardsByBoardId = async (req, res, next) => {
                 }, 0),
                 dueDate: el.dueDate,
                 members: el.TaskMembers,
+                isDone: el.isDone,
               });
             }),
           };
@@ -123,28 +124,42 @@ exports.addCard = async (req, res, next) => {
   try {
     //require board_id name position
     const data = req.body;
+    console.log("data", req.body);
     const boardId = req.params;
+    console.log("params----------------------------", req.params);
     const uuid = uuidv4();
     const newId = uuid + "card";
-    console.log(newId);
+    let newData;
     if (!data.name) createError("Is require", 400);
     const checkBoardById = await cardService.findBoardById(boardId.id);
+    // const checkBoardById = await cardService.findBoardById(boardId);
     if (!checkBoardById) createError("Not Found", 400);
-    const [checkPosition] = await cardService.findCardMaxPosition(boardId.id);
-    if (!checkPosition) createError("Not Found", 400);
-    const newData = {
-      ...data,
-      boardId: boardId.id,
-      position: +checkPosition.position + 1,
-      type: newId,
-    };
-    console.log(newData);
+    let [checkPosition] = await cardService.findCardMaxPosition(boardId.id);
+    // let [checkPosition] = await cardService.findCardMaxPosition(boardId);
+    console.log("check--------------", checkPosition);
+    if (!checkPosition) {
+      newData = {
+        ...data,
+        boardId: boardId.id,
+        position: 1,
+        type: newId,
+      };
+    } else {
+      newData = {
+        ...data,
+        boardId: boardId.id,
+        position: +checkPosition.position + 1,
+        type: newId,
+      };
+    }
+    console.log("newData--------------------------------------", newData);
     const cardData = await cardService.createCard(newData);
     res.status(200).json(cardData);
   } catch (error) {
     next(error);
   }
 };
+
 exports.updateNameCard = async (req, res, next) => {
   try {
     const boardId = req.params;
@@ -215,20 +230,9 @@ exports.updateCardName = async (req, res, next) => {
     next(err);
   }
 };
-exports.deleteCard = async (req, res, next) => {
-  const t = await sequelize.transaction();
-  try {
-    const cardId = req.params;
-    if (!cardId) createError("CardId is require");
-    const [allData] = await cardService.findTaskByCardId(cardId.id);
 
-    // const resCard = await cardService.deleteCardById(cardId.id, t);
-    // if (!resCard) createError("Card delete fail", 400);
-    // await t.commit();
-    // res.status(200).json({ msg: "Delete complete" });
-    res.status(200).json(allData);
-  } catch (error) {
-    await t.rollback();
-    next(error);
-  }
+exports.deleteCard = async (req, res, next) => {
+  const { id } = req.params;
+  await cardService.deleteCardById(id);
+  res.status(204).send();
 };

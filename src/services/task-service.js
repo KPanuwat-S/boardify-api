@@ -26,20 +26,20 @@ exports.findTaskById = (id) => {
           model: Card,
 
           attributes: {
-            exclude: ["createdAt", "updatedAt","boardId"],
+            exclude: ["createdAt", "updatedAt", "boardId"],
           },
 
           include: {
             model: Task,
             where: { id },
             attributes: {
-              exclude: ["createdAt", "updatedAt","cardId"],
+              exclude: ["createdAt", "updatedAt", "cardId"],
             },
             include: [
               {
                 model: Label,
                 attributes: {
-                  exclude: ["createdAt", "updatedAt","id"],
+                  exclude: ["createdAt", "updatedAt", "id"],
                 },
               },
               {
@@ -47,17 +47,21 @@ exports.findTaskById = (id) => {
               },
               {
                 model: Comment,
+                include: { model: User },
                 attributes: {
                   exclude: ["createdAt", "updatedAt"],
                 },
               },
               {
                 model: TaskMember,
-                include: User,
+                include: { model: User },
                 attributes: {
                   exclude: ["createdAt", "updatedAt"],
                 },
               },
+              //
+
+              //
               {
                 model: Attachment,
                 attributes: {
@@ -72,14 +76,48 @@ exports.findTaskById = (id) => {
   });
 };
 exports.deleteTaskById = (id) => Task.destroy({ where: { id } });
-exports.updateTaskById = ({ name, description, cardId, labelId, userId, id }) =>
-  Task.update(
-    { name, description, cardId, labelId, userId },
+exports.updateTaskById = (
+  name,
+  description,
+  position,
+  cardId,
+  labelId,
+  attachment,
+  userId,
+  id,
+  dueDate,
+  isDone
+) => {
+  console.log("data to db", {
+    name,
+    description,
+    position,
+    cardId,
+    labelId,
+    attachment,
+    userId,
+    id,
+    dueDate,
+  });
+  return Task.update(
+    {
+      name,
+      description,
+      cardId,
+      labelId,
+      userId,
+      dueDate,
+      position,
+      attachment,
+      isDone,
+    },
     { where: { id } }
   );
+};
 //addtask
+exports.addTask = (input) => Task.create(input);
 exports.findCardById = (id) => Card.findAll({ where: { id } });
-exports.findTaskByCardIdMax = (cardId) =>{
+exports.findTaskByCardIdMax = (cardId) => {
   Task.findAll({
     where: { cardId },
     order: [[sequelize.literal("position"), "DESC"]],
@@ -87,6 +125,14 @@ exports.findTaskByCardIdMax = (cardId) =>{
   });
   console.log("checklistObject", checklistObject);
 };
+
+exports.addChecklist = (checklistObject) => {
+  return ChecklistItem.create({
+    description: checklistObject.description,
+    taskId: checklistObject.taskId,
+  });
+};
+
 exports.updateChecklistItems = (checklistObject) =>
   ChecklistItem.update(
     {
@@ -109,4 +155,4 @@ exports.removeMemberFromTask = (taskId, userId) =>
   TaskMember.destroy({ where: { taskId: taskId, userId: userId } });
 
 exports.getMemberInTask = (taskId) =>
-  TaskMember.findAll({ where: { taskId: taskId } });
+  TaskMember.findAll({ where: { taskId: taskId.id } });

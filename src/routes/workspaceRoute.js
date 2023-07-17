@@ -12,7 +12,7 @@ router.get(
 router.post("/", workSpaceController.createWorkspaceById);
 router.post("/", workSpaceController.addMemberWorkspaceById);
 router.get("/countMemberWorkspace/:id", workSpaceController.countMemberWorkspace)
-router.delete("/:id", workSpaceController.deleteWorkspaceById);
+router.delete("/deleteWorkspace/:id", workSpaceController.deleteWorkspaceById);
 router.patch("/:id", workSpaceController.updateWorkspace);
 
 module.exports = router;

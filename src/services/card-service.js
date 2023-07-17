@@ -322,8 +322,8 @@ exports.findTaskByCardId = (cardId) => {
   });
 };
 
-exports.deleteCardById = (id, t) => {
-  return Card.destroy({ where: { id }, transaction: t });
+exports.deleteCardById = (id) => {
+  return Card.destroy({ where: { id } });
 };
 exports.deleteAttachment = (id, t) => {
   return Attachment.destroy({ where: { id }, transaction: t });

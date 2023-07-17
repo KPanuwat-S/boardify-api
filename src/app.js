@@ -11,6 +11,8 @@ const errorMiddleware = require("./middlewares/error");
 const authRoute = require("./routes/authRoute");
 const boardsRoute = require("./routes/boardsRoute");
 const workspaceRoute = require("./routes/workspaceRoute");
+const stripeRoute = require("./routes/stripeRoute");
+
 const authenticate = require("./middlewares/authenticate");
 const memberRoute = require("./routes/memberRoute");
 const myProfileRoute = require("./routes/myProfileRoute");
@@ -30,10 +32,11 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoute);
+app.use("/stripe", stripeRoute);
 app.use("/workspaces", authenticate, workspaceRoute);
 app.use("/boards", authenticate, boardsRoute);
 app.use("/member", memberRoute);
-app.use("/myProfile", myProfileRoute);
+app.use("/myProfile", authenticate, myProfileRoute);
 // app.use("/", res.send({ message: "Hi Boardify" }));
 
 app.use(notFoundMiddleware);

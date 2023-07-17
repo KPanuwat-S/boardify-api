@@ -12,10 +12,12 @@ const emailVerifyService = require("../services/emailVerifyService");
 exports.register = async (req, res, next) => {
   try {
     const value = validateRegister(req.body);
+    console.log("------------",value);
 
     const checkEmail = await authService.findByEmail(value.email);
+    console.log("check check check-------",checkEmail);
 
-    if (checkEmail.length > 0) createError("Email is duplicate", 400);
+    if (checkEmail) createError("Email is duplicate", 400);
 
     value.password = await bcryptService.hash(value.password);
     const user = await authService.createUser(value);
@@ -85,24 +87,24 @@ exports.getUser = (req, res, next) => {
 };
 
 exports.googleLogin = async (req, res, next) => {
-  const { googleId } = req.body.profileObj;
+  const { data } = req.body;
+  console.log("req", data);
 
-  const user = await authService.findByGoogleId(googleId);
+  console.log("data", data.email);
+  const user = await authService.findByEmail(data.email);
   try {
     if (!user) {
       const googleUser = req.body.profileObj;
       const user = {
-        firstName: googleUser.givenName,
-        lastName: googleUser.familyName,
-        email: googleUser.email,
+        firstName: data["given_name"],
+        lastName: data["family_name"],
+        email: data.email,
         isVerify: true,
-        googleId: googleId,
       };
       await authService.createUser(user);
     }
-
     const accessToken = tokenService.sign({ id: user.id });
-
+    console.log("accesstoken form gglogin fn", accessToken);
     res.status(200).json({ accessToken });
   } catch (err) {
     next(err);

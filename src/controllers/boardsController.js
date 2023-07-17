@@ -1,4 +1,5 @@
 const boardService = require("../services/board-service");
+const { Board } = require("../models");
 
 exports.createBoard = async (req, res, next) => {
   try {
@@ -53,6 +54,19 @@ exports.getOneBoard = async (req, res, next) => {
     const board = await boardService.getOneBoard(id);
     res.status(200).json(board);
   } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteBoard = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+
+    await Board.destroy({ where: { id: id } });
+
+    res.status(204).json("Delete Success");
+  } catch (error) {
     next(err);
   }
 };
