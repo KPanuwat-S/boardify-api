@@ -42,10 +42,14 @@ exports.addMember = async (req, res, next) => {
     console.log("addMember value: ", workspaceId, memberAll);
 
     for (const data of memberAll) {
-      if (await WorkspaceMember.findOne({ where: { userId: data.id } })) {
-        console.log("ssss", data);
-        console.log(data.id);
-        console.log("It's already have member.");
+      if (
+        await WorkspaceMember.findOne({
+          where: { userId: data.id, workspaceId: workspaceId },
+        })
+      ) {
+        // console.log("ssss", data);
+        // console.log(data.id);
+
         return;
       }
       await WorkspaceMember.create({
