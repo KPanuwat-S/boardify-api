@@ -191,11 +191,14 @@ exports.deleteAttachment = async (req, res, next) => {
 ///comment
 exports.addComment = async (req, res, next) => {
   try {
-    const taskId = req.params;
     const user = req.user;
     const data = req.body;
-    const checkTaskById = taskService.addComment()
-    res.status(200).json("hi");
+    const result = taskService.addComment(
+      data.comment,
+      data.userId,
+      data.taskId
+    );
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }

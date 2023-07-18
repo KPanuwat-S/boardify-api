@@ -23,7 +23,7 @@ router.patch("/tasksDnd/:id", cardsController.updateTask);
 
 router.delete("/cards/:id", cardsController.deleteCard);
 router.patch("/cards/card/:id", cardsController.updateCardName);
-/
+
 
 router.get("/tasks/members/all/:id", taskController.getMembersInTask);
 router.get("/tasks/:id", taskController.getTaskById);

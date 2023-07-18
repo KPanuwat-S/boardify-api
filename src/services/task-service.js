@@ -90,7 +90,6 @@ exports.findTaskById = (id) => {
         //   attributes: {
         //     exclude: ["createdAt", "updatedAt", "cardId"],
         //   },
-  
       },
       {
         model: Label,
@@ -170,6 +169,7 @@ exports.findTaskByCardIdMax = (cardId) => {
   console.log("checklistObject", checklistObject);
 };
 
+// Checklist
 exports.addChecklist = (checklistObject) => {
   return ChecklistItem.create({
     description: checklistObject.description,
@@ -190,8 +190,7 @@ exports.updateChecklistItems = (checklistObject) =>
 exports.deleteChecklist = (checklistId) =>
   ChecklistItem.destroy({ where: { id: checklistId } });
 
-// exports.findTask = (id) => Task.id
-
+// Membership
 exports.addMemberToTask = (taskId, userId) =>
   TaskMember.create({ taskId: taskId, userId: userId });
 
@@ -200,3 +199,8 @@ exports.removeMemberFromTask = (taskId, userId) =>
 
 exports.getMemberInTask = (taskId) =>
   TaskMember.findAll({ where: { taskId: taskId.id } });
+
+// Comment
+
+exports.addComment = (comment, userId, taskId) =>
+  Comment.create({ comment, userId, taskId });
