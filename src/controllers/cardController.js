@@ -87,26 +87,28 @@ exports.getDashBoard = async (req, res, next) => {
       }
       return acc;
     }, []);
-    // /label
+
     const [labelData] = await cardService.findLabel(board.id);
     const labelMap = {};
+
     labelData.Cards.forEach((card) => {
       card.Tasks.forEach((task) => {
         const { labelId, Label } = task;
-        const labelName = Label.description;
+        const labelName = Label?.description;
 
-        if (!labelMap[labelId]) {
-          labelMap[labelId] = {
-            id: labelId,
-            labelName: labelName,
-            taskTotal: 0,
-          };
+        if (labelId !== null) {
+          if (!labelMap[labelId]) {
+            labelMap[labelId] = {
+              id: labelId,
+              labelName: labelName,
+              taskTotal: 0,
+            };
+          }
+
+          labelMap[labelId].taskTotal++;
         }
-
-        labelMap[labelId].taskTotal++;
       });
     });
-
     const convertedData = Object.values(labelMap);
     const data = {
       taskLabel: convertedData,

@@ -205,7 +205,7 @@ exports.findLabel = (boardId) => {
           exclude: [
             "createdAt",
             "updatedAt",
-            "name",
+
             "userId",
             "boardId",
             "position",
