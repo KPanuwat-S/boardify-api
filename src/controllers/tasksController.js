@@ -26,9 +26,9 @@ exports.getTaskById = async (req, res, next) => {
 
     // const [[[toBeSentData]]] = newData?.filter((value) => value != null);
     // console.log("user----------", user);
-    res.status(200).json(taskData);
+    // res.status(200).json(toBeSentData);
     // res.status(200).json(newData);
-    // res.status(200).json(taskData);
+    res.status(200).json(taskData);
   } catch (error) {
     next(error);
   }

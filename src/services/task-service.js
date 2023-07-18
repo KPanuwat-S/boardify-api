@@ -74,7 +74,50 @@ exports.findTaskById = (id) => {
   //     ],
   //   },
   // });
-  return Task.findOne({ where: { id } });
+  return Task.findOne({
+    where: { id },
+    include: [
+      {
+        model: Card,
+
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "boardId"],
+        },
+
+        // include: {
+        //   model: Task,
+        //   where: { id },
+        //   attributes: {
+        //     exclude: ["createdAt", "updatedAt", "cardId"],
+        //   },
+  
+      },
+      {
+        model: Label,
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "id"],
+        },
+      },
+      {
+        model: ChecklistItem,
+      },
+      {
+        model: Comment,
+        include: { model: User },
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      },
+      {
+        model: TaskMember,
+        include: { model: User },
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      },
+      // },
+    ],
+  });
 };
 exports.deleteTaskById = (id) => Task.destroy({ where: { id } });
 exports.updateTaskById = (
