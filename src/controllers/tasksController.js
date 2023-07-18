@@ -7,7 +7,7 @@ exports.getTaskById = async (req, res, next) => {
   try {
     const user = req.user;
     const task = req.params;
-    // console.log("---------",task);
+    console.log("--------- task :",task);
     if (!task.id) createError("Task id is required", 400);
 
     const taskData = await taskService.findTaskById(task.id);
@@ -21,8 +21,12 @@ exports.getTaskById = async (req, res, next) => {
         }));
       return;
     });
+    console.log("newdata-------- :", newData);
+
 
     const [[[toBeSentData]]] = newData.filter((value) => value != null);
+    console.log("----- : ", toBeSentData);
+
     res.status(200).json(toBeSentData);
     // res.status(200).json(taskData);
   } catch (error) {
