@@ -23,11 +23,6 @@ exports.getTaskById = async (req, res, next) => {
         }));
       return;
     });
-
-    // const [[[toBeSentData]]] = newData?.filter((value) => value != null);
-    // console.log("user----------", user);
-    // res.status(200).json(toBeSentData);
-    // res.status(200).json(newData);
     res.status(200).json(taskData);
   } catch (error) {
     next(error);
@@ -194,17 +189,17 @@ exports.deleteAttachment = async (req, res, next) => {
   }
 };
 ///comment
-// exports.addComment = async (req, res, next) => {
-//   try {
-//     const taskId = req.params;
-//     const user = req.user;
-//     const data = req.body;
-//     // const checkTaskById = taskService.
-//     res.status(200).json("hi");
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+exports.addComment = async (req, res, next) => {
+  try {
+    const taskId = req.params;
+    const user = req.user;
+    const data = req.body;
+    const checkTaskById = taskService.addComment()
+    res.status(200).json("hi");
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.addMeToTask = async (req, res, next) => {
   try {
