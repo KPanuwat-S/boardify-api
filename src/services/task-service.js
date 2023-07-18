@@ -14,66 +14,67 @@ const {
   User,
 } = require("../models");
 exports.findTaskById = (id) => {
-  return Workspace.findOne({
-    attributes: { exclude: ["createdAt", "updatedAt"] },
-    include: {
-      model: Board,
+  // return Workspace.findOne({
+  //   attributes: { exclude: ["createdAt", "updatedAt"] },
+  //   include: {
+  //     model: Board,
 
-      attributes: { exclude: ["createdAt", "updatedAt"] },
+  //     attributes: { exclude: ["createdAt", "updatedAt"] },
 
-      include: [
-        {
-          model: Card,
+  //     include: [
+  //       {
+  //         model: Card,
 
-          attributes: {
-            exclude: ["createdAt", "updatedAt", "boardId"],
-          },
+  //         attributes: {
+  //           exclude: ["createdAt", "updatedAt", "boardId"],
+  //         },
 
-          include: {
-            model: Task,
-            where: { id },
-            attributes: {
-              exclude: ["createdAt", "updatedAt", "cardId"],
-            },
-            include: [
-              {
-                model: Label,
-                attributes: {
-                  exclude: ["createdAt", "updatedAt", "id"],
-                },
-              },
-              {
-                model: ChecklistItem,
-              },
-              {
-                model: Comment,
-                include: { model: User },
-                attributes: {
-                  exclude: ["createdAt", "updatedAt"],
-                },
-              },
-              {
-                model: TaskMember,
-                include: { model: User },
-                attributes: {
-                  exclude: ["createdAt", "updatedAt"],
-                },
-              },
-              //
+  //         include: {
+  //           model: Task,
+  //           where: { id },
+  //           attributes: {
+  //             exclude: ["createdAt", "updatedAt", "cardId"],
+  //           },
+  //           include: [
+  //             {
+  //               model: Label,
+  //               attributes: {
+  //                 exclude: ["createdAt", "updatedAt", "id"],
+  //               },
+  //             },
+  //             {
+  //               model: ChecklistItem,
+  //             },
+  //             {
+  //               model: Comment,
+  //               include: { model: User },
+  //               attributes: {
+  //                 exclude: ["createdAt", "updatedAt"],
+  //               },
+  //             },
+  //             {
+  //               model: TaskMember,
+  //               include: { model: User },
+  //               attributes: {
+  //                 exclude: ["createdAt", "updatedAt"],
+  //               },
+  //             },
+  //             //
 
-              //
-              {
-                model: Attachment,
-                attributes: {
-                  exclude: ["createdAt", "updatedAt"],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    },
-  });
+  //             //
+  //             {
+  //               model: Attachment,
+  //               attributes: {
+  //                 exclude: ["createdAt", "updatedAt"],
+  //               },
+  //             },
+  //           ],
+  //         },
+  //       },
+  //     ],
+  //   },
+  // });
+  return Task.findOne({ where: { id } });
 };
 exports.deleteTaskById = (id) => Task.destroy({ where: { id } });
 exports.updateTaskById = (
