@@ -39,7 +39,7 @@ exports.payment = async (req, res, next) => {
     });
 
     if (!checkUser) {
-      createError("error", 400);
+      createError("error -------", 400);
     }
 
     const data = req.query;
