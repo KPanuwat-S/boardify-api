@@ -7,28 +7,30 @@ exports.getTaskById = async (req, res, next) => {
   try {
     const user = req.user;
     const task = req.params;
-    console.log("--------- task :",task);
+    // console.log("---------",task);
+    // console.log("user-------------", user);
+    // console.log("task-------------", task);
     if (!task.id) createError("Task id is required", 400);
 
     const taskData = await taskService.findTaskById(task.id);
 
     console.log("taskData", taskData);
 
-    const newData = await taskData.Boards.map((el) => {
-      if (el.Cards.length > 0)
-        return (newTaskId = el.Cards?.map((el) => {
-          return el.Tasks;
-        }));
-      return;
-    });
-    console.log("newdata-------- :", newData);
+    // const newData = await taskData?.Boards?.map((el) => {
+    //   if (el.Cards.length > 0)
+    //     return (newTaskId = el.Cards?.map((el) => {
+    //       return el.Tasks;
+    //     }));
+    //   return;
+    // });
+    // console.log("newdata-------- :", newData);
 
 
-    const [[[toBeSentData]]] = newData.filter((value) => value != null);
-    console.log("----- : ", toBeSentData);
-
-    res.status(200).json(toBeSentData);
-    // res.status(200).json(taskData);
+    // const [[[toBeSentData]]] = newData?.filter((value) => value != null);
+    // console.log("user----------", user);
+    // res.status(200).json(toBeSentData);
+    // res.status(200).json(newData);
+    res.status(200).json(taskData);
   } catch (error) {
     next(error);
   }
