@@ -24,19 +24,20 @@ router.patch("/tasksDnd/:id", cardsController.updateTask);
 router.delete("/cards/:id", cardsController.deleteCard);
 router.patch("/cards/card/:id", cardsController.updateCardName);
 
-
 router.get("/tasks/members/all/:id", taskController.getMembersInTask);
 router.get("/tasks/:id", taskController.getTaskById);
 
 router.post("/tasks/members/me", taskController.addMeToTask);
+router.post("/tasks/members/member", taskController.addMemberToTask);
 router.delete("/tasks/members/me/:id", taskController.removeMeFromTask);
 
 router.post("/tasks/checklists", taskController.addChecklist);
-router.post("/tasks/:id", taskController.addTask);
+router.post("/tasks/comments", taskController.addComment);
+router.patch("/tasks/comments", taskController.editComment);
+router.delete("/tasks/comments/:id", taskController.deleteComment);
 router.patch("/tasks/checklists", taskController.editChecklist);
 
-router.post("/tasks/comments", taskController.addComment)
-
+router.post("/tasks/task/:id", taskController.addTask);
 router.patch("/tasks/:id", taskController.updateTask);
 router.delete("/tasks/:id", taskController.deleteTaskById);
 router.delete("/tasks/checklists/:id", taskController.deleteChecklistById);

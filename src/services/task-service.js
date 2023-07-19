@@ -14,66 +14,6 @@ const {
   User,
 } = require("../models");
 exports.findTaskById = (id) => {
-  // return Workspace.findOne({
-  //   attributes: { exclude: ["createdAt", "updatedAt"] },
-  //   include: {
-  //     model: Board,
-
-  //     attributes: { exclude: ["createdAt", "updatedAt"] },
-
-  //     include: [
-  //       {
-  //         model: Card,
-
-  //         attributes: {
-  //           exclude: ["createdAt", "updatedAt", "boardId"],
-  //         },
-
-  //         include: {
-  //           model: Task,
-  //           where: { id },
-  //           attributes: {
-  //             exclude: ["createdAt", "updatedAt", "cardId"],
-  //           },
-  //           include: [
-  //             {
-  //               model: Label,
-  //               attributes: {
-  //                 exclude: ["createdAt", "updatedAt", "id"],
-  //               },
-  //             },
-  //             {
-  //               model: ChecklistItem,
-  //             },
-  //             {
-  //               model: Comment,
-  //               include: { model: User },
-  //               attributes: {
-  //                 exclude: ["createdAt", "updatedAt"],
-  //               },
-  //             },
-  //             {
-  //               model: TaskMember,
-  //               include: { model: User },
-  //               attributes: {
-  //                 exclude: ["createdAt", "updatedAt"],
-  //               },
-  //             },
-  //             //
-
-  //             //
-  //             {
-  //               model: Attachment,
-  //               attributes: {
-  //                 exclude: ["createdAt", "updatedAt"],
-  //               },
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //   },
-  // });
   return Task.findOne({
     where: { id },
     include: [
@@ -83,13 +23,6 @@ exports.findTaskById = (id) => {
         attributes: {
           exclude: ["createdAt", "updatedAt", "boardId"],
         },
-
-        // include: {
-        //   model: Task,
-        //   where: { id },
-        //   attributes: {
-        //     exclude: ["createdAt", "updatedAt", "cardId"],
-        //   },
       },
       {
         model: Label,
@@ -103,9 +36,6 @@ exports.findTaskById = (id) => {
       {
         model: Comment,
         include: { model: User },
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
       },
       {
         model: TaskMember,
@@ -204,3 +134,8 @@ exports.getMemberInTask = (taskId) =>
 
 exports.addComment = (comment, userId, taskId) =>
   Comment.create({ comment, userId, taskId });
+
+exports.editComment = (id, comment) =>
+  Comment.update({ comment }, { where: { id } });
+
+exports.deleteComment = (id) => Comment.destroy({ where: { id } });

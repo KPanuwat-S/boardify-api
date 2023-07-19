@@ -7,22 +7,12 @@ exports.getTaskById = async (req, res, next) => {
   try {
     const user = req.user;
     const task = req.params;
-    // console.log("---------",task);
     console.log("user-------------", user);
     console.log("task-------------", task);
     if (!task.id) createError("Task id is required", 400);
 
     const taskData = await taskService.findTaskById(task.id);
 
-    console.log("taskData", taskData);
-
-    const newData = await taskData?.Boards?.map((el) => {
-      if (el.Cards.length > 0)
-        return (newTaskId = el.Cards?.map((el) => {
-          return el.Tasks;
-        }));
-      return;
-    });
     res.status(200).json(taskData);
   } catch (error) {
     next(error);
@@ -188,21 +178,47 @@ exports.deleteAttachment = async (req, res, next) => {
     next(error);
   }
 };
-///comment
+
+// Comment
+
 exports.addComment = async (req, res, next) => {
   try {
     const user = req.user;
     const data = req.body;
-    const result = taskService.addComment(
+
+    const result = await taskService.addComment(
       data.comment,
-      data.userId,
+      user.id,
       data.taskId
     );
+    console.log("-------------------------------------result", result);
     res.status(200).json(result);
   } catch (error) {
     next(error);
   }
 };
+
+exports.editComment = async (req, res, next) => {
+  try {
+    const data = req.body;
+    const result = await taskService.editComment(data.id, data.comment);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteComment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await taskService.deleteComment(id);
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Member
 
 exports.addMeToTask = async (req, res, next) => {
   try {
@@ -228,7 +244,15 @@ exports.removeMeFromTask = async (req, res, next) => {
   }
 };
 
-exports.addMemberToTask = async (req, res, next) => {};
+exports.addMemberToTask = async (req, res, next) => {
+  try {
+    const { taskId, userId } = req.body;
+    const result = await taskService.addMemberToTask(taskId, userId);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.getMembersInTask = async (req, res, next) => {
   try {

@@ -1,4 +1,10 @@
-const { WorkspaceMember, Board, Workspace, User } = require("../models");
+const {
+  WorkspaceMember,
+  Board,
+  Workspace,
+  User,
+  Payment,
+} = require("../models");
 const { Op } = require("sequelize");
 exports.getWorkspaces = async (id) => {
   const data = await WorkspaceMember.findAll({
@@ -81,10 +87,13 @@ exports.getWorkspaceById = async (workspaceId) => {
   const countMember = await WorkspaceMember.count({
     where: { workspaceId: data.id },
   });
+  console.log("data--------------------", data);
+
+  const isPremium = await Payment.findOne({ where: { userId: data.userId } });
 
   const dataObj = JSON.parse(JSON.stringify(data));
 
-  const newData = { ...dataObj, count: countMember };
+  const newData = { ...dataObj, count: countMember, isPremium: !!isPremium };
   // console.log("lllllllllll----", newData);
 
   return newData;
