@@ -12,10 +12,10 @@ const emailVerifyService = require("../services/emailVerifyService");
 exports.register = async (req, res, next) => {
   try {
     const value = validateRegister(req.body);
-    console.log("------------",value);
+    console.log("------------", value);
 
     const checkEmail = await authService.findByEmail(value.email);
-    console.log("check check check-------",checkEmail);
+    console.log("check check check-------", checkEmail);
 
     if (checkEmail) createError("Email is duplicate", 400);
 
